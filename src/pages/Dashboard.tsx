@@ -3,15 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MemberCard, Member } from "@/components/MemberCard";
-import { mockMembers } from "@/data/members";
+import { MembersTable } from "@/components/MembersTable";
+import { surveyMembers } from "@/data/surveyMembers";
+import { MemberProfile } from "@/utils/csvParser";
 import { Users, Activity, AlertTriangle, TrendingDown } from "lucide-react";
 
 export default function Dashboard() {
   const [sortBy, setSortBy] = useState<"risk" | "compliance" | "weightLoss">("risk");
   const [filterRisk, setFilterRisk] = useState<"All" | "High" | "Medium" | "Low">("All");
 
-  const sortedMembers = [...mockMembers]
+  const sortedMembers = [...surveyMembers]
     .filter(member => filterRisk === "All" || member.riskLevel === filterRisk)
     .sort((a, b) => {
       if (sortBy === "risk") {
@@ -20,15 +21,20 @@ export default function Dashboard() {
       } else if (sortBy === "compliance") {
         return a.surveyCompliance - b.surveyCompliance;
       } else {
-        return a.weightLoss - b.weightLoss;
+        return a.weightChange - b.weightChange;
       }
     });
 
+  const handleMemberClick = (member: MemberProfile) => {
+    console.log("Selected member:", member);
+    // This could open a detailed view or navigate to member details
+  };
+
   const stats = {
-    totalMembers: mockMembers.length,
-    highRisk: mockMembers.filter(m => m.riskLevel === "High").length,
-    avgCompliance: Math.round(mockMembers.reduce((acc, m) => acc + m.surveyCompliance, 0) / mockMembers.length),
-    avgWeightLoss: Math.round(mockMembers.reduce((acc, m) => acc + m.weightLoss, 0) / mockMembers.length * 10) / 10,
+    totalMembers: surveyMembers.length,
+    highRisk: surveyMembers.filter(m => m.riskLevel === "High").length,
+    avgCompliance: Math.round(surveyMembers.reduce((acc, m) => acc + m.surveyCompliance, 0) / surveyMembers.length),
+    avgWeightLoss: Math.round(surveyMembers.reduce((acc, m) => acc + m.weightChange, 0) / surveyMembers.length * 10) / 10,
   };
 
   return (
@@ -129,25 +135,13 @@ export default function Dashboard() {
               </SelectContent>
             </Select>
           </div>
-          
-          <div className="flex-1 text-sm text-muted-foreground self-end">
-            Showing {sortedMembers.length} of {stats.totalMembers} members
-          </div>
         </div>
 
-        {/* Member Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {sortedMembers.map((member) => (
-            <MemberCard key={member.id} member={member} />
-          ))}
-        </div>
-
-        {/* Empty State */}
-        {sortedMembers.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No members found matching the current filters.</p>
-          </div>
-        )}
+        {/* Members Table */}
+        <MembersTable 
+          members={sortedMembers} 
+          onMemberClick={handleMemberClick}
+        />
       </div>
     </div>
   );
