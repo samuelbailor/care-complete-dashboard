@@ -87,14 +87,9 @@ export function MembersTable({ members, onMemberClick }: MembersTableProps) {
       dataIndex: 'programCompliance',
       key: 'programCompliance',
       render: (compliance: number, record: MemberProfile) => (
-        <div>
-          <div className={styles.complianceContainer}>
-            {getComplianceIcon(compliance)}
-            <span className={styles.complianceValue}>{compliance}%</span>
-          </div>
-          <div className={styles.medicationInfo}>
-            Medication: {record.lastMedicationCompliance}
-          </div>
+        <div className={styles.complianceContainer}>
+          {getComplianceIcon(compliance)}
+          <span className={styles.complianceValue}>{compliance}%</span>
         </div>
       ),
     },
