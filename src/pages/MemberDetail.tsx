@@ -16,6 +16,19 @@ import { surveyMembers } from "@/data/surveyMembers";
 import { MemberProfile } from "@/utils/csvParser";
 import styles from "./MemberDetail.module.css";
 
+// Function to consistently assign org based on member name
+const getRandomOrg = (memberName: string): string => {
+  const orgs = ["ABCLogistics", "XYZ Sciences", "RWY Data"];
+  // Use member name to create consistent hash for org assignment
+  let hash = 0;
+  for (let i = 0; i < memberName.length; i++) {
+    const char = memberName.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return orgs[Math.abs(hash) % orgs.length];
+};
+
 export default function MemberDetail() {
   const { memberId } = useParams<{ memberId: string }>();
   const navigate = useNavigate();
@@ -188,6 +201,10 @@ export default function MemberDetail() {
                 <div className={styles.infoItem}>
                   <span className={styles.label}>Current Weight:</span>
                   <span className={styles.value}>{member.currentWeight} lbs</span>
+                </div>
+                <div className={styles.infoItem}>
+                  <span className={styles.label}>Org:</span>
+                  <span className={styles.value}>{getRandomOrg(member.name)}</span>
                 </div>
                 <div className={styles.infoItem}>
                   <span className={styles.label}>BMI:</span>
