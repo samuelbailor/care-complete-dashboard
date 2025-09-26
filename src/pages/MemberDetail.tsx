@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { Card, Row, Col, Tag, Timeline, Table, Progress, Input, Button, Spin } from "antd";
+import { Card, Row, Col, Tag, Timeline, Table, Progress, Input, Button, Spin, Collapse } from "antd";
 import { 
   UserOutlined, 
   MedicineBoxOutlined, 
@@ -11,12 +11,15 @@ import {
   CheckCircleOutlined,
   PlusOutlined,
   ArrowLeftOutlined,
-  ExclamationCircleOutlined
+  ExclamationCircleOutlined,
+  DownOutlined
 } from "@ant-design/icons";
 import { surveyMembers, programData } from "@/data/surveyMembers";
 import { MemberProfile } from "@/utils/csvParser";
 import { supabase } from "@/integrations/supabase/client";
 import styles from "./MemberDetail.module.css";
+
+const { Panel } = Collapse;
 
 // Risk assessment interface
 interface RiskAssessment {
@@ -608,6 +611,200 @@ export default function MemberDetail() {
                 ))}
               </div>
             </Card>
+          </Col>
+
+          {/* AI Risk Assessment - Collapsible */}
+          <Col span={24}>
+            <Collapse 
+              style={{ 
+                marginTop: '24px',
+                backgroundColor: '#fff',
+                border: '1px solid #d9d9d9',
+                borderRadius: '6px'
+              }}
+              expandIcon={({ isActive }) => <DownOutlined rotate={isActive ? 180 : 0} />}
+            >
+              <Panel 
+                header={
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <ExclamationCircleOutlined style={{ color: '#1890ff' }} />
+                    <span style={{ fontSize: '16px', fontWeight: '600' }}>AI Risk Assessment</span>
+                    {riskAssessment && (
+                      <Tag 
+                        color={
+                          riskAssessment.overallRiskLevel.toLowerCase() === 'high' ? 'red' :
+                          riskAssessment.overallRiskLevel.toLowerCase() === 'medium' ? 'orange' : 'green'
+                        }
+                      >
+                        {riskAssessment.overallRiskLevel.toUpperCase()} RISK
+                      </Tag>
+                    )}
+                    {riskAssessment && (
+                      <Tag 
+                        color={
+                          riskAssessment.outreachUrgency === 'IMMEDIATE' ? 'red' :
+                          riskAssessment.outreachUrgency === 'MODERATE' ? 'orange' : 'blue'
+                        }
+                      >
+                        {riskAssessment.outreachUrgency} OUTREACH
+                      </Tag>
+                    )}
+                  </div>
+                } 
+                key="1"
+                style={{ 
+                  backgroundColor: '#fafafa',
+                  border: 'none'
+                }}
+              >
+                {isLoadingRiskAssessment ? (
+                  <div style={{ textAlign: 'center', padding: '40px' }}>
+                    <Spin size="large" />
+                    <p style={{ marginTop: '16px', color: '#666' }}>Analyzing member data...</p>
+                  </div>
+                ) : riskAssessment ? (
+                  <Row gutter={[16, 16]} style={{ padding: '16px 0' }}>
+                    {/* Medication Adherence */}
+                    <Col span={12}>
+                      <Card 
+                        type="inner" 
+                        title="Medication Adherence"
+                        style={{ height: '100%' }}
+                      >
+                        <div style={{ marginBottom: '12px' }}>
+                          <strong>Pattern:</strong>
+                          <p style={{ marginTop: '4px', color: '#666', lineHeight: '1.5' }}>{riskAssessment.medicationAdherence.pattern}</p>
+                        </div>
+                        {riskAssessment.medicationAdherence.concerns && (
+                          <div style={{ marginBottom: '12px' }}>
+                            <strong>Concerns:</strong>
+                            <p style={{ marginTop: '4px', color: '#d32f2f', lineHeight: '1.5' }}>{riskAssessment.medicationAdherence.concerns}</p>
+                          </div>
+                        )}
+                        <div>
+                          <strong>Recommendations:</strong>
+                          <p style={{ marginTop: '4px', color: '#1976d2', lineHeight: '1.5' }}>{riskAssessment.medicationAdherence.recommendations}</p>
+                        </div>
+                      </Card>
+                    </Col>
+
+                    {/* Side Effects */}
+                    <Col span={12}>
+                      <Card 
+                        type="inner" 
+                        title="Side Effects Analysis"
+                        style={{ height: '100%' }}
+                      >
+                        <div style={{ marginBottom: '12px' }}>
+                          <strong>Severity Trend:</strong>
+                          <p style={{ marginTop: '4px', color: '#666', lineHeight: '1.5' }}>{riskAssessment.sideEffects.severityTrend}</p>
+                        </div>
+                        <div style={{ marginBottom: '12px' }}>
+                          <strong>Progression:</strong>
+                          <p style={{ marginTop: '4px', color: '#666', lineHeight: '1.5' }}>{riskAssessment.sideEffects.progression}</p>
+                        </div>
+                        <div>
+                          <strong>Recommendations:</strong>
+                          <p style={{ marginTop: '4px', color: '#1976d2', lineHeight: '1.5' }}>{riskAssessment.sideEffects.recommendations}</p>
+                        </div>
+                      </Card>
+                    </Col>
+
+                    {/* Weight Trends */}
+                    <Col span={12}>
+                      <Card 
+                        type="inner" 
+                        title="Weight Analysis"
+                        style={{ height: '100%' }}
+                      >
+                        <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
+                          <strong>Baseline:</strong> 
+                          <span>{riskAssessment.weightTrends.baselineWeight}</span>
+                        </div>
+                        <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
+                          <strong>Current:</strong> 
+                          <span>{riskAssessment.weightTrends.currentWeight}</span>
+                        </div>
+                        <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
+                          <strong>Total Change:</strong> 
+                          <span style={{ color: '#2e7d32', fontWeight: '500' }}>{riskAssessment.weightTrends.totalChange}</span>
+                        </div>
+                        <div style={{ marginBottom: '12px' }}>
+                          <strong>Pattern:</strong>
+                          <p style={{ marginTop: '4px', color: '#666', lineHeight: '1.5' }}>{riskAssessment.weightTrends.pattern}</p>
+                        </div>
+                        <div>
+                          <strong>Recommendations:</strong>
+                          <p style={{ marginTop: '4px', color: '#1976d2', lineHeight: '1.5' }}>{riskAssessment.weightTrends.recommendations}</p>
+                        </div>
+                      </Card>
+                    </Col>
+
+                    {/* Activity Levels */}
+                    <Col span={12}>
+                      <Card 
+                        type="inner" 
+                        title="Activity Analysis"
+                        style={{ height: '100%' }}
+                      >
+                        <div style={{ marginBottom: '12px' }}>
+                          <strong>Pattern:</strong>
+                          <p style={{ marginTop: '4px', color: '#666', lineHeight: '1.5' }}>{riskAssessment.activityLevels.pattern}</p>
+                        </div>
+                        <div style={{ marginBottom: '12px' }}>
+                          <strong>Correlation:</strong>
+                          <p style={{ marginTop: '4px', color: '#666', lineHeight: '1.5' }}>{riskAssessment.activityLevels.correlation}</p>
+                        </div>
+                        <div>
+                          <strong>Recommendations:</strong>
+                          <p style={{ marginTop: '4px', color: '#1976d2', lineHeight: '1.5' }}>{riskAssessment.activityLevels.recommendations}</p>
+                        </div>
+                      </Card>
+                    </Col>
+
+                    {/* Symptom Evolution */}
+                    <Col span={24}>
+                      <Card type="inner" title="Symptom Evolution Timeline">
+                        <Row gutter={16}>
+                          {riskAssessment.symptomEvolution.initial && (
+                            <Col span={8}>
+                              <div>
+                                <strong>Initial State:</strong>
+                                <p style={{ marginTop: '4px', color: '#2e7d32', lineHeight: '1.5' }}>{riskAssessment.symptomEvolution.initial}</p>
+                              </div>
+                            </Col>
+                          )}
+                          {riskAssessment.symptomEvolution.deterioration && (
+                            <Col span={8}>
+                              <div>
+                                <strong>Deterioration:</strong>
+                                <p style={{ marginTop: '4px', color: '#d32f2f', lineHeight: '1.5' }}>{riskAssessment.symptomEvolution.deterioration}</p>
+                              </div>
+                            </Col>
+                          )}
+                          {riskAssessment.symptomEvolution.improvement && (
+                            <Col span={8}>
+                              <div>
+                                <strong>Improvement:</strong>
+                                <p style={{ marginTop: '4px', color: '#2e7d32', lineHeight: '1.5' }}>{riskAssessment.symptomEvolution.improvement}</p>
+                              </div>
+                            </Col>
+                          )}
+                        </Row>
+                        <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #f0f0f0' }}>
+                          <strong>Clinical Recommendations:</strong>
+                          <p style={{ marginTop: '4px', color: '#1976d2', fontWeight: '500', lineHeight: '1.5' }}>{riskAssessment.symptomEvolution.recommendations}</p>
+                        </div>
+                      </Card>
+                    </Col>
+                  </Row>
+                ) : (
+                  <p style={{ textAlign: 'center', color: '#666', fontStyle: 'italic', padding: '40px' }}>
+                    No risk assessment data available
+                  </p>
+                )}
+              </Panel>
+            </Collapse>
           </Col>
 
           {/* Staff Interactions */}
