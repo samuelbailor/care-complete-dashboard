@@ -1,5 +1,5 @@
 /* Ant Design styles */
-@import '~antd/dist/reset.css';
+@import 'antd/dist/reset.css';
 
 /* Global CSS Variables */
 :root {
