@@ -1,12 +1,18 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, Select, Button, Tag } from "antd";
+import { 
+  UserOutlined, 
+  ThunderboltOutlined, 
+  ExclamationCircleOutlined,
+  FallOutlined,
+  ExportOutlined
+} from "@ant-design/icons";
 import { MembersTable } from "@/components/MembersTable";
 import { surveyMembers } from "@/data/surveyMembers";
 import { MemberProfile } from "@/utils/csvParser";
-import { Users, Activity, AlertTriangle, TrendingDown } from "lucide-react";
+import styles from "./Dashboard.module.css";
+
+const { Option } = Select;
 
 export default function Dashboard() {
   const [sortBy, setSortBy] = useState<"risk" | "compliance" | "weightLoss">("risk");
@@ -38,103 +44,83 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className={styles.dashboard}>
       {/* Header */}
-      <header className="bg-card border-b border-border/50 shadow-sm">
-        <div className="container mx-auto px-6 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground">Care Complete</h1>
-              <p className="text-muted-foreground mt-1">GLP-1 Weight Management Program</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <Badge variant="outline" className="text-sm">
-                Dashboard
-              </Badge>
-              <Button>Export Data</Button>
-            </div>
+      <header className={styles.header}>
+        <div className={styles.headerContent}>
+          <div>
+            <h1 className={styles.headerTitle}>Care Complete</h1>
+            <p className={styles.headerSubtitle}>GLP-1 Weight Management Program</p>
+          </div>
+          <div className={styles.headerActions}>
+            <Tag color="blue">Dashboard</Tag>
+            <Button type="primary" icon={<ExportOutlined />}>
+              Export Data
+            </Button>
           </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-6 py-8">
+      <div className={styles.mainContent}>
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="border-l-4 border-l-primary">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                Total Members
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-foreground">{stats.totalMembers}</div>
-            </CardContent>
+        <div className={styles.statsGrid}>
+          <Card className={styles.statCard}>
+            <div className={styles.statTitle}>
+              <UserOutlined />
+              Total Members
+            </div>
+            <div className={styles.statValue}>{stats.totalMembers}</div>
           </Card>
 
-          <Card className="border-l-4 border-l-destructive">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4" />
-                High Risk Members
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-destructive">{stats.highRisk}</div>
-            </CardContent>
+          <Card className={`${styles.statCard} ${styles.highRisk}`}>
+            <div className={styles.statTitle}>
+              <ExclamationCircleOutlined />
+              High Risk Members
+            </div>
+            <div className={`${styles.statValue} ${styles.error}`}>{stats.highRisk}</div>
           </Card>
 
-          <Card className="border-l-4 border-l-warning">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <Activity className="h-4 w-4" />
-                Avg. Compliance
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-foreground">{stats.avgCompliance}%</div>
-            </CardContent>
+          <Card className={`${styles.statCard} ${styles.compliance}`}>
+            <div className={styles.statTitle}>
+              <ThunderboltOutlined />
+              Avg. Compliance
+            </div>
+            <div className={styles.statValue}>{stats.avgCompliance}%</div>
           </Card>
 
-          <Card className="border-l-4 border-l-success">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <TrendingDown className="h-4 w-4" />
-                Avg. Weight Loss
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-success">{stats.avgWeightLoss} lbs</div>
-            </CardContent>
+          <Card className={`${styles.statCard} ${styles.weightLoss}`}>
+            <div className={styles.statTitle}>
+              <FallOutlined />
+              Avg. Weight Loss
+            </div>
+            <div className={`${styles.statValue} ${styles.success}`}>{stats.avgWeightLoss} lbs</div>
           </Card>
         </div>
 
         {/* Filters and Controls */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <div className="flex gap-4">
-            <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Sort by..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="risk">Sort by Risk Level</SelectItem>
-                <SelectItem value="compliance">Sort by Compliance</SelectItem>
-                <SelectItem value="weightLoss">Sort by Weight Progress</SelectItem>
-              </SelectContent>
-            </Select>
+        <div className={styles.controls}>
+          <Select
+            value={sortBy}
+            onChange={(value) => setSortBy(value)}
+            style={{ width: 200 }}
+            placeholder="Sort by..."
+          >
+            <Option value="risk">Sort by Risk Level</Option>
+            <Option value="compliance">Sort by Compliance</Option>
+            <Option value="weightLoss">Sort by Weight Progress</Option>
+          </Select>
 
-            <Select value={filterRisk} onValueChange={(value: any) => setFilterRisk(value)}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Filter by risk..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="All">All Risk Levels</SelectItem>
-                <SelectItem value="High">High Risk Only</SelectItem>
-                <SelectItem value="Medium">Medium Risk Only</SelectItem>
-                <SelectItem value="Low">Low Risk Only</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <Select
+            value={filterRisk}
+            onChange={(value) => setFilterRisk(value)}
+            style={{ width: 200 }}
+            placeholder="Filter by risk..."
+          >
+            <Option value="All">All Risk Levels</Option>
+            <Option value="High">High Risk Only</Option>
+            <Option value="Medium">Medium Risk Only</Option>
+            <Option value="Low">Low Risk Only</Option>
+          </Select>
         </div>
 
         {/* Members Table */}

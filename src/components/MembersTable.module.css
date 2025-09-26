@@ -1,0 +1,186 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.searchCard {
+  padding: 16px;
+}
+
+.searchContainer {
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  z-index: 2;
+}
+
+.searchInput {
+  padding-left: 40px !important;
+}
+
+.resultsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.resultsText {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.tableCard {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.memberRow {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.memberRow:hover {
+  background-color: rgba(24, 144, 255, 0.04) !important;
+}
+
+.memberInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.memberName {
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 4px;
+}
+
+.memberDetails {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.riskBadge {
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.riskHigh {
+  background-color: rgba(255, 77, 79, 0.1);
+  color: var(--error-color);
+  border: 1px solid rgba(255, 77, 79, 0.2);
+}
+
+.riskMedium {
+  background-color: rgba(250, 173, 20, 0.1);
+  color: var(--warning-color);
+  border: 1px solid rgba(250, 173, 20, 0.2);
+}
+
+.riskLow {
+  background-color: rgba(82, 196, 26, 0.1);
+  color: var(--success-color);
+  border: 1px solid rgba(82, 196, 26, 0.2);
+}
+
+.complianceContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.complianceValue {
+  font-weight: 600;
+}
+
+.medicationInfo {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.weightContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.weightValue {
+  font-weight: 600;
+}
+
+.weightSuccess {
+  color: var(--success-color);
+}
+
+.weightError {
+  color: var(--error-color);
+}
+
+.weightDetails {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.dateContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.dateValue {
+  font-weight: 600;
+}
+
+.sideEffects {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.activityContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.activityValue {
+  font-weight: 600;
+}
+
+.durationValue {
+  font-weight: 600;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 64px 24px;
+  color: var(--text-secondary);
+}
+
+.iconSuccess {
+  color: var(--success-color);
+}
+
+.iconWarning {
+  color: var(--warning-color);
+}
+
+.iconError {
+  color: var(--error-color);
+}
+
+.iconSecondary {
+  color: var(--text-secondary);
+}
