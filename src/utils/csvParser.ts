@@ -196,15 +196,29 @@ function parseWeight(weightStr: string): number {
 
 function parseHeight(heightStr: string): number {
   // Parse height like "5'9"" - extract feet and inches
+  console.log('parseHeight input:', JSON.stringify(heightStr));
+  
   // Remove any outer quotes and handle nested quotes
   const cleanHeight = heightStr.replace(/^"|"$/g, '');
+  console.log('parseHeight cleaned:', JSON.stringify(cleanHeight));
   
-  const match = cleanHeight.match(/(\d+)'(\d+)"/);
+  // Try multiple regex patterns to catch different formats
+  let match = cleanHeight.match(/(\d+)'(\d+)["\u201D\u201C]?/); // Match with various quote types
+  if (!match) {
+    // Try without any ending quote
+    match = cleanHeight.match(/(\d+)'(\d+)/);
+  }
+  
+  console.log('parseHeight match:', match);
+  
   if (match) {
     const feet = parseInt(match[1]);
     const inches = parseInt(match[2]);
-    return feet * 12 + inches;
+    const total = feet * 12 + inches;
+    console.log('parseHeight result:', feet, 'feet', inches, 'inches =', total, 'total inches');
+    return total;
   }
+  console.log('parseHeight failed to match:', cleanHeight);
   return 0;
 }
 
