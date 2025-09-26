@@ -80,10 +80,13 @@ export default function MemberDetail() {
       const foundMember = surveyMembers.find(m => m.id === memberId);
       setMember(foundMember || null);
       
-      // Fetch risk assessment for GLP-1 members
-      if (foundMember && foundMember.memberGoals.some(goal => 
-        goal.toLowerCase().includes('weight') || goal.toLowerCase().includes('glp')
-      )) {
+      console.log('Found member:', foundMember?.name);
+      console.log('Member goals:', foundMember?.memberGoals);
+      console.log('Member ID:', foundMember?.id);
+      
+      // Fetch risk assessment for GLP-1 members (all members in surveyMembers are GLP-1)
+      if (foundMember) {
+        console.log('Triggering risk assessment for:', foundMember.name);
         fetchRiskAssessment(foundMember);
       }
     }
