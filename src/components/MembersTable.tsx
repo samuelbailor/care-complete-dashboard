@@ -59,9 +59,6 @@ export function MembersTable({ members, onMemberClick }: MembersTableProps) {
       render: (name: string, record: MemberProfile) => (
         <div className={styles.memberInfo}>
           <div className={styles.memberName}>{name}</div>
-          <div className={styles.memberDetails}>
-            {record.height} • {record.totalSurveys} surveys completed
-          </div>
         </div>
       ),
     },
