@@ -80,13 +80,8 @@ export default function MemberDetail() {
       const foundMember = surveyMembers.find(m => m.id === memberId);
       setMember(foundMember || null);
       
-      console.log('Found member:', foundMember?.name);
-      console.log('Member goals:', foundMember?.memberGoals);
-      console.log('Member ID:', foundMember?.id);
-      
       // Fetch risk assessment for GLP-1 members (all members in surveyMembers are GLP-1)
       if (foundMember) {
-        console.log('Triggering risk assessment for:', foundMember.name);
         fetchRiskAssessment(foundMember);
       }
     }
@@ -380,10 +375,8 @@ export default function MemberDetail() {
             </Card>
           </Col>
 
-          {/* AI Risk Assessment - only for GLP-1 members */}
-          {member.memberGoals.some(goal => 
-            goal.toLowerCase().includes('weight') || goal.toLowerCase().includes('glp')
-          ) && (
+          {/* AI Risk Assessment - always show for members from survey data */}
+          {(
             <Col span={24}>
               <Card 
                 title={
