@@ -57,8 +57,8 @@ This project is built with:
 - Vite
 - TypeScript
 - React
-- shadcn-ui
-- Tailwind CSS
+- Ant Design
+- CSS Modules
 
 ## How can I deploy this project?
 
