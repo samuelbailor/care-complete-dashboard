@@ -182,6 +182,10 @@ export default function MemberDetail() {
                   <span className={styles.value}>{member.height}</span>
                 </div>
                 <div className={styles.infoItem}>
+                  <span className={styles.label}>Starting Weight:</span>
+                  <span className={styles.value}>{member.initialWeight} lbs</span>
+                </div>
+                <div className={styles.infoItem}>
                   <span className={styles.label}>Current Weight:</span>
                   <span className={styles.value}>{member.currentWeight} lbs</span>
                 </div>
