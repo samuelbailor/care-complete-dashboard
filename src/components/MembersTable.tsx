@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Input, Table, Card, Button, Tag } from "antd";
+import { Input, Table, Card, Button, Tag, Skeleton } from "antd";
 import { 
   SearchOutlined,
   FallOutlined,
@@ -17,9 +17,10 @@ import styles from "./MembersTable.module.css";
 interface MembersTableProps {
   members: MemberProfile[];
   onMemberClick?: (member: MemberProfile) => void;
+  isLoadingRiskData?: boolean;
 }
 
-export function MembersTable({ members, onMemberClick }: MembersTableProps) {
+export function MembersTable({ members, onMemberClick, isLoadingRiskData = false }: MembersTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   
@@ -73,16 +74,20 @@ export function MembersTable({ members, onMemberClick }: MembersTableProps) {
       dataIndex: 'riskLevel',
       key: 'riskLevel',
       render: (risk: string) => (
-        <Tag 
-          color={getRiskTagColor(risk)}
-          className={`${styles.riskBadge} ${
-            risk === 'High' ? styles.riskHigh : 
-            risk === 'Medium' ? styles.riskMedium : 
-            styles.riskLow
-          }`}
-        >
-          {risk}
-        </Tag>
+        isLoadingRiskData ? (
+          <Skeleton.Button size="small" active />
+        ) : (
+          <Tag 
+            color={getRiskTagColor(risk)}
+            className={`${styles.riskBadge} ${
+              risk === 'High' ? styles.riskHigh : 
+              risk === 'Medium' ? styles.riskMedium : 
+              styles.riskLow
+            }`}
+          >
+            {risk}
+          </Tag>
+        )
       ),
     },
     {
@@ -90,10 +95,14 @@ export function MembersTable({ members, onMemberClick }: MembersTableProps) {
       dataIndex: 'programCompliance',
       key: 'programCompliance',
       render: (compliance: number, record: MemberProfile) => (
-        <div className={styles.complianceContainer}>
-          {getComplianceIcon(compliance)}
-          <span className={styles.complianceValue}>{compliance}%</span>
-        </div>
+        isLoadingRiskData ? (
+          <Skeleton.Button size="small" active />
+        ) : (
+          <div className={styles.complianceContainer}>
+            {getComplianceIcon(compliance)}
+            <span className={styles.complianceValue}>{compliance}%</span>
+          </div>
+        )
       ),
     },
     {

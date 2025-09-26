@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, Select, Button, Tag, Modal, Spin } from "antd";
 import { 
   UserOutlined, 
@@ -23,10 +23,28 @@ export default function Dashboard() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [summary, setSummary] = useState('');
+  const [riskAssessmentData, setRiskAssessmentData] = useState<{members: Array<{name: string, risk: string, compliance: string}>} | null>(null);
+  const [isLoadingRiskData, setIsLoadingRiskData] = useState(false);
 
   const currentMembers = programData[selectedProgram].members;
 
-  const sortedMembers = [...currentMembers]
+  // Merge risk assessment data with current members
+  const membersWithRiskData = currentMembers.map(member => {
+    const riskData = riskAssessmentData?.members.find(rd => rd.name === member.name);
+    const newRiskLevel = riskData ? (riskData.risk.charAt(0).toUpperCase() + riskData.risk.slice(1)) : member.riskLevel;
+    // Ensure risk level is valid
+    const validatedRiskLevel = (newRiskLevel === "High" || newRiskLevel === "Medium" || newRiskLevel === "Low") 
+      ? newRiskLevel as "High" | "Medium" | "Low"
+      : member.riskLevel;
+    
+    return {
+      ...member,
+      riskLevel: validatedRiskLevel,
+      programCompliance: riskData ? parseInt(riskData.compliance.replace('%', '')) : member.programCompliance,
+    };
+  });
+
+  const sortedMembers = [...membersWithRiskData]
     .filter(member => filterRisk === "All" || member.riskLevel === filterRisk)
     .sort((a, b) => {
       if (sortBy === "risk") {
@@ -39,6 +57,31 @@ export default function Dashboard() {
       }
     });
 
+
+  // Fetch risk assessment data when program changes
+  useEffect(() => {
+    const fetchRiskAssessment = async () => {
+      setIsLoadingRiskData(true);
+      try {
+        const csvText = programData[selectedProgram].csvData;
+        
+        const { data, error } = await supabase.functions.invoke('overall-risk-assessment', {
+          body: { csvData: csvText }
+        });
+
+        if (error) throw error;
+        
+        setRiskAssessmentData(data);
+      } catch (error) {
+        console.error('Error fetching risk assessment:', error);
+        // Keep using original data if API fails
+      } finally {
+        setIsLoadingRiskData(false);
+      }
+    };
+
+    fetchRiskAssessment();
+  }, [selectedProgram]);
 
   const handleSummarizeCSV = async () => {
     setIsModalVisible(true);
@@ -105,10 +148,10 @@ export default function Dashboard() {
   };
 
   const stats = {
-    totalMembers: currentMembers.length,
-    highRisk: currentMembers.filter(m => m.riskLevel === "High").length,
-    avgCompliance: Math.round(currentMembers.reduce((acc, m) => acc + m.programCompliance, 0) / currentMembers.length),
-    avgWeightLoss: Math.round(currentMembers.reduce((acc, m) => acc + m.weightChange, 0) / currentMembers.length * 10) / 10,
+    totalMembers: membersWithRiskData.length,
+    highRisk: membersWithRiskData.filter(m => m.riskLevel === "High").length,
+    avgCompliance: Math.round(membersWithRiskData.reduce((acc, m) => acc + m.programCompliance, 0) / membersWithRiskData.length),
+    avgWeightLoss: Math.round(membersWithRiskData.reduce((acc, m) => acc + m.weightChange, 0) / membersWithRiskData.length * 10) / 10,
   };
 
   return (
@@ -214,6 +257,7 @@ export default function Dashboard() {
         {/* Members Table */}
         <MembersTable 
           members={sortedMembers}
+          isLoadingRiskData={isLoadingRiskData}
         />
       </div>
 
