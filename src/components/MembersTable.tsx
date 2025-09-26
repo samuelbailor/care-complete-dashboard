@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Input, Table, Card, Button, Tag } from "antd";
 import { 
   SearchOutlined,
@@ -20,6 +21,11 @@ interface MembersTableProps {
 
 export function MembersTable({ members, onMemberClick }: MembersTableProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+  
+  const handleMemberClick = (member: MemberProfile) => {
+    navigate(`/member-risk/${encodeURIComponent(member.name)}`);
+  };
   
   const filteredMembers = members.filter(member =>
     member.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -208,7 +214,7 @@ export function MembersTable({ members, onMemberClick }: MembersTableProps) {
               `${range[0]}-${range[1]} of ${total} members`,
           }}
           onRow={(record) => ({
-            onClick: () => onMemberClick?.(record),
+            onClick: () => handleMemberClick(record),
             className: styles.memberRow,
           })}
           locale={{
