@@ -1,15 +1,17 @@
 import { useState } from "react";
-import { Card, Select, Button, Tag } from "antd";
+import { Card, Select, Button, Tag, Modal, Spin } from "antd";
 import { 
   UserOutlined, 
   ThunderboltOutlined, 
   ExclamationCircleOutlined,
   FallOutlined,
-  ExportOutlined
+  ExportOutlined,
+  FileTextOutlined
 } from "@ant-design/icons";
 import { MembersTable } from "@/components/MembersTable";
 import { surveyMembers } from "@/data/surveyMembers";
 import { MemberProfile } from "@/utils/csvParser";
+import { supabase } from "@/integrations/supabase/client";
 import styles from "./Dashboard.module.css";
 
 const { Option } = Select;
@@ -17,6 +19,9 @@ const { Option } = Select;
 export default function Dashboard() {
   const [sortBy, setSortBy] = useState<"risk" | "compliance" | "weightLoss">("risk");
   const [filterRisk, setFilterRisk] = useState<"All" | "High" | "Medium" | "Low">("All");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [summary, setSummary] = useState('');
 
   const sortedMembers = [...surveyMembers]
     .filter(member => filterRisk === "All" || member.riskLevel === filterRisk)
@@ -36,6 +41,37 @@ export default function Dashboard() {
     // This could open a detailed view or navigate to member details
   };
 
+  const handleSummarizeCSV = async () => {
+    setIsModalVisible(true);
+    setIsLoading(true);
+    setSummary('');
+
+    try {
+      // Read the CSV file content
+      const response = await fetch('/src/data/survey-data.csv');
+      const csvText = await response.text();
+
+      // Call the edge function
+      const { data, error } = await supabase.functions.invoke('csv-summarizer', {
+        body: { csvData: csvText }
+      });
+
+      if (error) throw error;
+
+      setSummary(data.summary || 'No summary received');
+    } catch (error) {
+      console.error('Error calling CSV summarizer:', error);
+      setSummary('Error generating summary. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+    setSummary('');
+  };
+
   const stats = {
     totalMembers: surveyMembers.length,
     highRisk: surveyMembers.filter(m => m.riskLevel === "High").length,
@@ -53,6 +89,13 @@ export default function Dashboard() {
             <p className={styles.headerSubtitle}>GLP-1 Weight Management Program</p>
           </div>
           <div className={styles.headerActions}>
+            <Button 
+              type="primary" 
+              icon={<FileTextOutlined />}
+              onClick={handleSummarizeCSV}
+            >
+              Summarize Data
+            </Button>
             <Tag color="blue">Dashboard</Tag>
             <Button type="primary" icon={<ExportOutlined />}>
               Export Data
@@ -129,6 +172,30 @@ export default function Dashboard() {
           onMemberClick={handleMemberClick}
         />
       </div>
+
+      {/* CSV Summary Modal */}
+      <Modal
+        title="CSV Data Summary"
+        open={isModalVisible}
+        onCancel={handleModalClose}
+        footer={[
+          <Button key="close" onClick={handleModalClose}>
+            Close
+          </Button>
+        ]}
+        width={700}
+      >
+        {isLoading ? (
+          <div style={{ textAlign: 'center', padding: '40px' }}>
+            <Spin size="large" />
+            <p style={{ marginTop: '16px' }}>Analyzing CSV data...</p>
+          </div>
+        ) : (
+          <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
+            {summary}
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }
