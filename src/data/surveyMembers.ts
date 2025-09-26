@@ -40,28 +40,35 @@ Sophia Patel,Yes,No,Minor constipation but manageable.,5 months,4,Yes,195 lbs,"5
 Sophia Patel,Yes,No,No issues; steady progress.,6 months,4,Yes,190 lbs,"5'6""",2024-06-13,TOKEN_0036
 Sophia Patel,Yes,No,No issues; steady progress.,7 months,6,Yes,186 lbs,"5'6""",2024-07-13,TOKEN_0037`;
 
-// Diabetes Management Program data
-const diabetesCsvData = `Name,How well have you been managing your blood sugar levels,Have you experienced any diabetic complications,Please describe any symptoms you've been experiencing,How long have you been on your current diabetes medication regimen?,How many days per week have you engaged in physical activity,Is this your first time with this medication regimen,What is your current weight as of today?,What is your height?,Submitted At,Token
-Robert Chen,Well controlled,No,Blood sugar stable; feeling energetic.,6 months,4,No,198 lbs,"5'11""",2024-01-15,TOKEN_1001
-Robert Chen,Poorly controlled,Yes,Frequent urination and increased thirst.,7 months,2,No,201 lbs,"5'11""",2024-02-14,TOKEN_1002
-Robert Chen,Well controlled,No,Energy levels improved; sleeping better.,8 months,5,No,196 lbs,"5'11""",2024-03-15,TOKEN_1003
-Robert Chen,Moderately controlled,Yes,Occasional dizziness and fatigue.,9 months,3,No,199 lbs,"5'11""",2024-04-14,TOKEN_1004
-Sarah Martinez,Well controlled,No,No major issues; maintaining target levels.,3 months,6,Yes,165 lbs,"5'5""",2024-01-15,TOKEN_1005
-Sarah Martinez,Moderately controlled,Yes,Some episodes of low blood sugar.,4 months,4,Yes,162 lbs,"5'5""",2024-02-14,TOKEN_1006
-Sarah Martinez,Well controlled,No,Feeling great; diet and exercise routine working well.,5 months,6,Yes,158 lbs,"5'5""",2024-03-15,TOKEN_1007
-Sarah Martinez,Well controlled,No,Stable glucose readings; increased energy.,6 months,5,Yes,155 lbs,"5'5""",2024-04-14,TOKEN_1008
-David Thompson,Poorly controlled,Yes,Blurred vision and numbness in feet.,12 months,1,No,245 lbs,"6'2""",2024-01-15,TOKEN_1009
-David Thompson,Moderately controlled,Yes,Still experiencing peripheral neuropathy symptoms.,13 months,2,No,248 lbs,"6'2""",2024-02-14,TOKEN_1010
-David Thompson,Moderately controlled,No,Symptoms improving with new medication adjustment.,14 months,3,No,242 lbs,"6'2""",2024-03-15,TOKEN_1011
-David Thompson,Well controlled,No,Much better control; symptoms largely resolved.,15 months,4,No,238 lbs,"6'2""",2024-04-14,TOKEN_1012
-Lisa Wang,Well controlled,No,Excellent control; very satisfied with progress.,2 months,5,Yes,142 lbs,"5'3""",2024-01-15,TOKEN_1013
-Lisa Wang,Well controlled,No,Maintaining excellent glucose levels.,3 months,6,Yes,139 lbs,"5'3""",2024-02-14,TOKEN_1014
-Lisa Wang,Moderately controlled,Yes,Had a few high glucose episodes after meals.,4 months,4,Yes,141 lbs,"5'3""",2024-03-15,TOKEN_1015
-Lisa Wang,Well controlled,No,Back on track; adjusted meal timing.,5 months,5,Yes,138 lbs,"5'3""",2024-04-14,TOKEN_1016
-Michael Rodriguez,Moderately controlled,Yes,Frequent low blood sugar episodes.,8 months,3,No,189 lbs,"5'8""",2024-01-15,TOKEN_1017
-Michael Rodriguez,Poorly controlled,Yes,Severe fatigue and mood swings.,9 months,1,No,192 lbs,"5'8""",2024-02-14,TOKEN_1018
-Michael Rodriguez,Well controlled,No,Much improved with medication adjustment.,10 months,4,No,186 lbs,"5'8""",2024-03-15,TOKEN_1019
-Michael Rodriguez,Well controlled,No,Feeling much better; energy levels up.,11 months,5,No,183 lbs,"5'8""",2024-04-14,TOKEN_1020`;
+// Diabetes Management Program data (from uploaded CSV)
+const diabetesCsvData = `Name,Have you been taking your GLP-1 medication as prescribed,Have you experienced any side effects from your GLP-1 medication,Please describe your symptoms so we can help you manage them.,How long have you had a prescription for a GLP-1 medication?,How many days per week have you engaged in physical activity,Is this your first time receiving a GLP-1 prescription,What is your current weight as of today?,What is your height?,Submitted At,Token
+Maria Lopez,"No, missed a few doses.",No,"Feeling good, appetite under control, sleeping better.",4 months,1,Yes,256 lbs,"5'6""",2024-08-12,TOKEN_0023
+James Carter,Yes,No,Stomach cramps and diarrhea several times per week.,3 months,4,Yes,262 lbs,"5'4""",2024-08-12,TOKEN_0028
+James Carter,"No, missed a few doses.",No,Minor constipation but manageable.,2 months,0,Yes,206 lbs,"5'10""",2024-02-14,TOKEN_0022
+Ethan Kim,"No, missed a few doses.",Yes,Stomach cramps and diarrhea several times per week.,7 months,3,Yes,258 lbs,"6'0""",2024-08-12,TOKEN_0019
+Alex Johnson,"No, missed a few doses.",No,Minor constipation but manageable.,6 months,4,Yes,198 lbs,"5'9""",2024-07-13,TOKEN_0009
+Maria Lopez,Yes,Yes,Stomach cramps and diarrhea several times per week.,1 months,3,Yes,194 lbs,"5'4""",2024-07-13,TOKEN_0017
+Maria Lopez,"No, missed a few doses.",No,Minor constipation but manageable.,1 months,3,Yes,258 lbs,"5'3""",2024-01-15,TOKEN_0014
+James Carter,Yes,No,"Feeling good, appetite under control, sleeping better.",7 months,1,Yes,256 lbs,"5'10""",2024-08-12,TOKEN_0032
+James Carter,Yes,No,Heart palpitations with nausea; considering stopping.,6 months,4,Yes,241 lbs,"6'0""",2024-03-15,TOKEN_0031
+Maria Lopez,Yes,Yes,No issues; steady progress.,1 months,1,Yes,232 lbs,"5'3""",2024-01-15,TOKEN_0007
+Ethan Kim,"No, missed a few doses.",Yes,No issues; steady progress.,2 months,4,Yes,201 lbs,"5'9""",2024-08-12,TOKEN_0035
+James Carter,"No, missed a few doses.",No,Minor constipation but manageable.,2 months,5,Yes,195 lbs,"5'3""",2024-06-13,TOKEN_0008
+Ethan Kim,"No, missed a few doses.",No,Minor constipation but manageable.,6 months,3,Yes,199 lbs,"6'0""",2024-05-14,TOKEN_0017
+Sophia Patel,"No, missed a few doses.",Yes,Stomach cramps and diarrhea several times per week.,2 months,5,Yes,232 lbs,"5'3""",2024-05-14,TOKEN_0009
+Maria Lopez,Yes,Yes,Persistent nausea and occasional vomiting; hard to keep food down.,7 months,5,Yes,226 lbs,"5'3""",2024-04-14,TOKEN_0016
+Maria Lopez,Yes,Yes,Stomach cramps and diarrhea several times per week.,3 months,2,Yes,248 lbs,"5'9""",2024-01-15,TOKEN_0020
+Nora Williams,"No, missed a few doses.",No,Energy up; tolerating medication well.,4 months,3,Yes,189 lbs,"5'6""",2024-05-14,TOKEN_0003
+Maria Lopez,"No, missed a few doses.",No,Severe fatigue; struggling to exercise.,7 months,5,Yes,262 lbs,"5'3""",2024-07-13,TOKEN_0028
+Sophia Patel,"No, missed a few doses.",Yes,Stomach cramps and diarrhea several times per week.,7 months,4,Yes,193 lbs,"5'6""",2024-03-15,TOKEN_0013
+Alex Johnson,Yes,Yes,Stomach cramps and diarrhea several times per week.,2 months,1,Yes,226 lbs,"6'0""",2024-02-14,TOKEN_0004
+Nora Williams,Yes,Yes,Severe fatigue; struggling to exercise.,1 months,4,Yes,226 lbs,"6'0""",2024-03-15,TOKEN_0003
+James Carter,"No, missed a few doses.",Yes,Dizziness and headaches after injections.,2 months,4,Yes,190 lbs,"5'4""",2024-04-14,TOKEN_0013
+Maria Lopez,"No, missed a few doses.",No,Persistent nausea and occasional vomiting; hard to keep food down.,6 months,1,Yes,186 lbs,"5'6""",2024-06-13,TOKEN_0016
+Ethan Kim,Yes,Yes,Severe fatigue; struggling to exercise.,2 months,3,Yes,186 lbs,"5'6""",2024-01-15,TOKEN_0003
+Maria Lopez,"No, missed a few doses.",No,Energy up; tolerating medication well.,8 months,4,Yes,190 lbs,"5'3""",2024-02-14,TOKEN_0020
+Nora Williams,"No, missed a few doses.",No,No issues; steady progress.,4 months,3,Yes,241 lbs,"5'6""",2024-07-13,TOKEN_0036
+Ethan Kim,"No, missed a few doses.",No,Heart palpitations with nausea; considering stopping.,6 months,5,Yes,257 lbs,"5'4""",2024-04-14,TOKEN_0006`;
 
 const glp1Surveys = parseCSV(glp1CsvData);
 const diabetesSurveys = parseCSV(diabetesCsvData);
