@@ -84,6 +84,18 @@ export default function MemberDetail() {
     };
   };
 
+  const getProgramStartDate = () => {
+    if (!member.surveyResponses.length) return 'N/A';
+    const sortedResponses = [...member.surveyResponses].sort((a, b) => 
+      new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime()
+    );
+    return new Date(sortedResponses[0].submittedAt).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric', 
+      year: 'numeric'
+    });
+  };
+
   const getRiskTagColor = (risk: string) => {
     switch (risk) {
       case "High": return "red";
@@ -188,6 +200,10 @@ export default function MemberDetail() {
                 <div className={styles.primaryMedication}>
                   <span className={styles.label}>Primary GLP-1:</span>
                   <span className={styles.value}>{member.glp1Medication}</span>
+                </div>
+                <div className={styles.infoItem}>
+                  <span className={styles.label}>Program Start Date:</span>
+                  <span className={styles.value}>{getProgramStartDate()}</span>
                 </div>
                 <div className={styles.infoItem}>
                   <span className={styles.label}>Duration:</span>
