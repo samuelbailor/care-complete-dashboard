@@ -41,6 +41,29 @@ export function MemberDetailView({ member, visible, onClose }: MemberDetailViewP
 
   const allGoals = [...member.memberGoals, ...additionalGoals];
 
+  const extractWeightGoal = (goal: string): number | null => {
+    const match = goal.match(/lose\s+(\d+)\s*lbs?/i);
+    return match ? parseInt(match[1]) : null;
+  };
+
+  const calculateWeightProgress = (goal: string) => {
+    const targetLoss = extractWeightGoal(goal);
+    if (!targetLoss) return null;
+    
+    const actualLoss = member.initialWeight - member.currentWeight;
+    const targetWeight = member.initialWeight - targetLoss;
+    const progressPercent = Math.min((actualLoss / targetLoss) * 100, 100);
+    
+    return {
+      startWeight: member.initialWeight,
+      targetWeight,
+      currentWeight: member.currentWeight,
+      targetLoss,
+      actualLoss,
+      progressPercent: Math.max(0, progressPercent)
+    };
+  };
+
   const getRiskTagColor = (risk: string) => {
     switch (risk) {
       case "High": return "red";
@@ -201,12 +224,45 @@ export function MemberDetailView({ member, visible, onClose }: MemberDetailViewP
         <Col span={12}>
           <Card title={<><FileTextOutlined /> Member Goals</>} className={styles.detailCard}>
             <div className={styles.goalsList}>
-              {allGoals.map((goal, index) => (
-                <div key={index} className={styles.goalItem}>
-                  <CheckCircleOutlined className={styles.goalIcon} />
-                  <span>{goal}</span>
-                </div>
-              ))}
+              {allGoals.map((goal, index) => {
+                const weightProgress = calculateWeightProgress(goal);
+                
+                return (
+                  <div key={index} className={styles.goalItem}>
+                    <CheckCircleOutlined className={styles.goalIcon} />
+                    <div className={styles.goalContent}>
+                      <span className={styles.goalText}>{goal}</span>
+                      {weightProgress && (
+                        <div className={styles.weightProgressContainer}>
+                          <div className={styles.weightProgressLabels}>
+                            <span className={styles.startWeight}>
+                              Start: {weightProgress.startWeight} lbs
+                            </span>
+                            <span className={styles.currentProgress}>
+                              Current: {weightProgress.currentWeight} lbs 
+                              ({weightProgress.actualLoss.toFixed(1)} lbs lost)
+                            </span>
+                            <span className={styles.targetWeight}>
+                              Goal: {weightProgress.targetWeight} lbs
+                            </span>
+                          </div>
+                          <Progress 
+                            percent={weightProgress.progressPercent}
+                            size="small"
+                            strokeColor={
+                              weightProgress.progressPercent >= 100 ? '#52c41a' : 
+                              weightProgress.progressPercent >= 75 ? '#1890ff' : 
+                              weightProgress.progressPercent >= 50 ? '#faad14' : '#ff7a45'
+                            }
+                            showInfo={true}
+                            format={(percent) => `${percent?.toFixed(0)}%`}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
             <div className={styles.addGoalSection}>
               <Input.Group compact>

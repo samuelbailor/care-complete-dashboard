@@ -136,14 +136,72 @@
 
 .goalItem {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
-  padding: 8px 0;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.goalItem:last-child {
+  border-bottom: none;
 }
 
 .goalIcon {
   color: var(--success-color);
   font-size: 16px;
+  margin-top: 2px;
+}
+
+.goalContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.goalText {
+  font-weight: 500;
+  color: var(--text-color);
+  font-size: 14px;
+}
+
+.weightProgressContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background-color: var(--background-light);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+}
+
+.weightProgressLabels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.startWeight,
+.currentProgress,
+.targetWeight {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.startWeight {
+  color: var(--text-secondary);
+}
+
+.currentProgress {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.targetWeight {
+  color: var(--success-color);
 }
 
 .addGoalSection {
