@@ -10,7 +10,6 @@ import {
 } from "@ant-design/icons";
 import { MembersTable } from "@/components/MembersTable";
 import { MemberDetailView } from "@/components/MemberDetailView";
-import { TrendsSection } from "@/components/TrendsSection";
 import { surveyMembers } from "@/data/surveyMembers";
 import { MemberProfile } from "@/utils/csvParser";
 import { supabase } from "@/integrations/supabase/client";
@@ -81,6 +80,40 @@ export default function Dashboard() {
     setSummary('');
   };
 
+  const handleExportData = () => {
+    const csvHeaders = [
+      'Name', 'Risk Level', 'Program Compliance (%)', 'Weight Change (lbs)', 
+      'BMI', 'Activity (days/week)', 'Total Surveys', 'Last Survey Date', 'Duration'
+    ];
+    
+    const csvData = sortedMembers.map(member => [
+      member.name,
+      member.riskLevel,
+      member.programCompliance,
+      member.weightChange,
+      member.bmi,
+      member.averageActivity,
+      member.totalSurveys,
+      member.lastSurveyDate,
+      member.prescriptionDuration
+    ]);
+    
+    const csvContent = [
+      csvHeaders.join(','),
+      ...csvData.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `care-complete-members-${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const stats = {
     totalMembers: surveyMembers.length,
     highRisk: surveyMembers.filter(m => m.riskLevel === "High").length,
@@ -106,7 +139,11 @@ export default function Dashboard() {
               Summarize Data
             </Button>
             <Tag color="blue">Dashboard</Tag>
-            <Button type="primary" icon={<ExportOutlined />}>
+            <Button 
+              type="primary" 
+              icon={<ExportOutlined />}
+              onClick={handleExportData}
+            >
               Export Data
             </Button>
           </div>
@@ -114,9 +151,6 @@ export default function Dashboard() {
       </header>
 
       <div className={styles.mainContent}>
-        {/* Trends Section */}
-        <TrendsSection />
-
         {/* Stats Cards */}
         <div className={styles.statsGrid}>
           <Card className={styles.statCard}>
