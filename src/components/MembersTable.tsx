@@ -115,14 +115,9 @@ export function MembersTable({ members, onMemberClick }: MembersTableProps) {
       dataIndex: 'lastSurveyDate',
       key: 'lastSurveyDate',
       render: (date: string, record: MemberProfile) => (
-        <div>
-          <div className={styles.dateContainer}>
-            <CalendarOutlined className={styles.iconSecondary} />
-            <span className={styles.dateValue}>{date}</span>
-          </div>
-          <div className={styles.sideEffects}>
-            Side effects: {record.lastSideEffects}
-          </div>
+        <div className={styles.dateContainer}>
+          <CalendarOutlined className={styles.iconSecondary} />
+          <span className={styles.dateValue}>{date}</span>
         </div>
       ),
     },
