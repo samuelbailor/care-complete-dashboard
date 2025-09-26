@@ -1,4 +1,5 @@
-import { Modal, Card, Row, Col, Tag, Timeline, Table, Progress } from "antd";
+import { useState } from "react";
+import { Modal, Card, Row, Col, Tag, Timeline, Table, Progress, Input, Button } from "antd";
 import { 
   UserOutlined, 
   MedicineBoxOutlined, 
@@ -7,7 +8,8 @@ import {
   PhoneOutlined,
   FileTextOutlined,
   ExclamationCircleOutlined,
-  CheckCircleOutlined
+  CheckCircleOutlined,
+  PlusOutlined
 } from "@ant-design/icons";
 import { MemberProfile } from "@/utils/csvParser";
 import styles from "./MemberDetailView.module.css";
@@ -19,7 +21,25 @@ interface MemberDetailViewProps {
 }
 
 export function MemberDetailView({ member, visible, onClose }: MemberDetailViewProps) {
+  const [newGoal, setNewGoal] = useState("");
+  const [additionalGoals, setAdditionalGoals] = useState<string[]>([]);
+
   if (!member) return null;
+
+  const handleAddGoal = () => {
+    if (newGoal.trim()) {
+      setAdditionalGoals([...additionalGoals, newGoal.trim()]);
+      setNewGoal("");
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleAddGoal();
+    }
+  };
+
+  const allGoals = [...member.memberGoals, ...additionalGoals];
 
   const getRiskTagColor = (risk: string) => {
     switch (risk) {
@@ -181,12 +201,29 @@ export function MemberDetailView({ member, visible, onClose }: MemberDetailViewP
         <Col span={12}>
           <Card title={<><FileTextOutlined /> Member Goals</>} className={styles.detailCard}>
             <div className={styles.goalsList}>
-              {member.memberGoals.map((goal, index) => (
+              {allGoals.map((goal, index) => (
                 <div key={index} className={styles.goalItem}>
                   <CheckCircleOutlined className={styles.goalIcon} />
                   <span>{goal}</span>
                 </div>
               ))}
+            </div>
+            <div className={styles.addGoalSection}>
+              <Input.Group compact>
+                <Input
+                  style={{ width: 'calc(100% - 32px)' }}
+                  placeholder="Add new member goal..."
+                  value={newGoal}
+                  onChange={(e) => setNewGoal(e.target.value)}
+                  onPressEnter={handleKeyPress}
+                />
+                <Button 
+                  type="primary" 
+                  icon={<PlusOutlined />} 
+                  onClick={handleAddGoal}
+                  disabled={!newGoal.trim()}
+                />
+              </Input.Group>
             </div>
           </Card>
         </Col>

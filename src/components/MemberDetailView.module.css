@@ -146,6 +146,12 @@
   font-size: 16px;
 }
 
+.addGoalSection {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
+}
+
 .fillHistory {
   display: flex;
   flex-direction: column;
