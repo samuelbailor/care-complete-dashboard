@@ -193,6 +193,20 @@ export default function Dashboard() {
       </header>
 
       <div className={styles.mainContent}>
+        {/* Diabetes Program Disclaimer */}
+        {selectedProgram === "Diabetes Management Program" && (
+          <Card className={styles.disclaimerCard} style={{ marginBottom: '24px', backgroundColor: '#fff7e6', borderColor: '#ffec3d' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <ExclamationCircleOutlined style={{ color: '#faad14', fontSize: '18px' }} />
+              <div>
+                <strong>Note:</strong> The Diabetes Management Program is currently showing weight management data for demonstration purposes. 
+                In the full implementation, this program would track diabetes-specific metrics including A1C levels, blood sugar readings, 
+                and diabetes medications rather than weight loss data.
+              </div>
+            </div>
+          </Card>
+        )}
+
         {/* Stats Cards */}
         <div className={styles.statsGrid}>
           <Card className={styles.statCard}>

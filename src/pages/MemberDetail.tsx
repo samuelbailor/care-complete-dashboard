@@ -10,7 +10,8 @@ import {
   FileTextOutlined,
   CheckCircleOutlined,
   PlusOutlined,
-  ArrowLeftOutlined
+  ArrowLeftOutlined,
+  ExclamationCircleOutlined
 } from "@ant-design/icons";
 import { surveyMembers } from "@/data/surveyMembers";
 import { MemberProfile } from "@/utils/csvParser";
@@ -177,6 +178,20 @@ export default function MemberDetail() {
 
       {/* Content */}
       <div className={styles.content}>
+        {/* Diabetes Program Disclaimer */}
+        {member.memberGoals.some(goal => goal.toLowerCase().includes('diabetes') || goal.toLowerCase().includes('a1c') || goal.toLowerCase().includes('blood sugar')) && (
+          <Card style={{ marginBottom: '24px', backgroundColor: '#fff7e6', borderColor: '#ffec3d' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <ExclamationCircleOutlined style={{ color: '#faad14', fontSize: '18px' }} />
+              <div>
+                <strong>Diabetes Program Note:</strong> This member is part of the Diabetes Management Program. 
+                In the full implementation, this view would display diabetes-specific data including A1C trends, 
+                blood glucose monitoring, and diabetes medication management instead of weight-focused metrics.
+              </div>
+            </div>
+          </Card>
+        )}
+        
         <Row gutter={[24, 24]}>
           {/* Demographics */}
           <Col span={8}>
