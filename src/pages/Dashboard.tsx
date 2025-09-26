@@ -10,6 +10,7 @@ import {
 } from "@ant-design/icons";
 import { MembersTable } from "@/components/MembersTable";
 import { MemberDetailView } from "@/components/MemberDetailView";
+import { TrendsSection } from "@/components/TrendsSection";
 import { surveyMembers } from "@/data/surveyMembers";
 import { MemberProfile } from "@/utils/csvParser";
 import { supabase } from "@/integrations/supabase/client";
@@ -113,6 +114,9 @@ export default function Dashboard() {
       </header>
 
       <div className={styles.mainContent}>
+        {/* Trends Section */}
+        <TrendsSection />
+
         {/* Stats Cards */}
         <div className={styles.statsGrid}>
           <Card className={styles.statCard}>

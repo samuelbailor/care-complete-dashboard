@@ -1,0 +1,72 @@
+.trendsSection {
+  margin-bottom: 32px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin: 4px 0 0 0;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.chartsContainer {
+  background: var(--card-background);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chartTabs .ant-tabs-content-holder {
+  padding: 0 8px;
+}
+
+.chartGrid {
+  display: grid;
+  gap: 24px;
+}
+
+.chartCard {
+  background: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.chartTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chartContainer {
+  width: 100%;
+  height: 300px;
+}
+
+.chartDescription {
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-top: 8px;
+  font-style: italic;
+}
