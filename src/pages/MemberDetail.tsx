@@ -377,89 +377,6 @@ export default function MemberDetail() {
               </div>
             </Card>
           </Col>
-
-
-          {/* Member Goals */}
-          <Col span={12}>
-            <Card title={<><FileTextOutlined /> Member Goals</>} className={styles.detailCard}>
-              <div className={styles.goalsList}>
-                {allGoals.map((goal, index) => {
-                  const weightProgress = calculateWeightProgress(goal);
-                  
-                  return (
-                    <div key={index} className={styles.goalItem}>
-                      <CheckCircleOutlined className={styles.goalIcon} />
-                      <div className={styles.goalContent}>
-                        <span className={styles.goalText}>{goal}</span>
-                        {weightProgress && (
-                          <div className={styles.weightProgressContainer}>
-                            <div className={styles.weightProgressLabels}>
-                              <span className={styles.startWeight}>
-                                Start: {weightProgress.startWeight} lbs
-                              </span>
-                              <span className={styles.currentProgress}>
-                                Current: {weightProgress.currentWeight} lbs 
-                                ({weightProgress.actualLoss.toFixed(1)} lbs lost)
-                              </span>
-                              <span className={styles.targetWeight}>
-                                Goal: {weightProgress.targetWeight} lbs
-                              </span>
-                            </div>
-                            <Progress 
-                              percent={weightProgress.progressPercent}
-                              size="small"
-                              strokeColor={
-                                weightProgress.progressPercent >= 100 ? '#52c41a' : 
-                                weightProgress.progressPercent >= 75 ? '#1890ff' : 
-                                weightProgress.progressPercent >= 50 ? '#faad14' : '#ff7a45'
-                              }
-                              showInfo={true}
-                              format={(percent) => `${percent?.toFixed(0)}%`}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className={styles.addGoalSection}>
-                <Input.Group compact>
-                  <Input
-                    style={{ width: 'calc(100% - 32px)' }}
-                    placeholder="Add new member goal..."
-                    value={newGoal}
-                    onChange={(e) => setNewGoal(e.target.value)}
-                    onPressEnter={handleKeyPress}
-                  />
-                  <Button 
-                    type="primary" 
-                    icon={<PlusOutlined />} 
-                    onClick={handleAddGoal}
-                    disabled={!newGoal.trim()}
-                  />
-                </Input.Group>
-              </div>
-            </Card>
-          </Col>
-
-          {/* Fill History */}
-          <Col span={12}>
-            <Card title={<><CalendarOutlined /> Fill History</>} className={styles.detailCard}>
-              <div className={styles.fillHistory}>
-                {member.fillHistory.map((fill, index) => (
-                  <div key={index} className={styles.fillItem}>
-                    <div className={styles.fillDate}>{fill.date}</div>
-                    <div className={styles.fillDetails}>
-                      <span className={styles.medication}>{fill.medication}</span>
-                      <span className={styles.quantity}>{fill.quantity}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          </Col>
-
           {/* AI Risk Assessment - Collapsible */}
           <Col span={24}>
             <Collapse 
@@ -653,6 +570,88 @@ export default function MemberDetail() {
               </Panel>
             </Collapse>
           </Col>
+
+          {/* Member Goals */}
+          <Col span={12}>
+            <Card title={<><FileTextOutlined /> Member Goals</>} className={styles.detailCard}>
+              <div className={styles.goalsList}>
+                {allGoals.map((goal, index) => {
+                  const weightProgress = calculateWeightProgress(goal);
+                  
+                  return (
+                    <div key={index} className={styles.goalItem}>
+                      <CheckCircleOutlined className={styles.goalIcon} />
+                      <div className={styles.goalContent}>
+                        <span className={styles.goalText}>{goal}</span>
+                        {weightProgress && (
+                          <div className={styles.weightProgressContainer}>
+                            <div className={styles.weightProgressLabels}>
+                              <span className={styles.startWeight}>
+                                Start: {weightProgress.startWeight} lbs
+                              </span>
+                              <span className={styles.currentProgress}>
+                                Current: {weightProgress.currentWeight} lbs 
+                                ({weightProgress.actualLoss.toFixed(1)} lbs lost)
+                              </span>
+                              <span className={styles.targetWeight}>
+                                Goal: {weightProgress.targetWeight} lbs
+                              </span>
+                            </div>
+                            <Progress 
+                              percent={weightProgress.progressPercent}
+                              size="small"
+                              strokeColor={
+                                weightProgress.progressPercent >= 100 ? '#52c41a' : 
+                                weightProgress.progressPercent >= 75 ? '#1890ff' : 
+                                weightProgress.progressPercent >= 50 ? '#faad14' : '#ff7a45'
+                              }
+                              showInfo={true}
+                              format={(percent) => `${percent?.toFixed(0)}%`}
+                            />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className={styles.addGoalSection}>
+                <Input.Group compact>
+                  <Input
+                    style={{ width: 'calc(100% - 32px)' }}
+                    placeholder="Add new member goal..."
+                    value={newGoal}
+                    onChange={(e) => setNewGoal(e.target.value)}
+                    onPressEnter={handleKeyPress}
+                  />
+                  <Button 
+                    type="primary" 
+                    icon={<PlusOutlined />} 
+                    onClick={handleAddGoal}
+                    disabled={!newGoal.trim()}
+                  />
+                </Input.Group>
+              </div>
+            </Card>
+          </Col>
+
+          {/* Fill History */}
+          <Col span={12}>
+            <Card title={<><CalendarOutlined /> Fill History</>} className={styles.detailCard}>
+              <div className={styles.fillHistory}>
+                {member.fillHistory.map((fill, index) => (
+                  <div key={index} className={styles.fillItem}>
+                    <div className={styles.fillDate}>{fill.date}</div>
+                    <div className={styles.fillDetails}>
+                      <span className={styles.medication}>{fill.medication}</span>
+                      <span className={styles.quantity}>{fill.quantity}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </Col>
+
 
           {/* Staff Interactions */}
           <Col span={12}>
