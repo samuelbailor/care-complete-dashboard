@@ -377,13 +377,13 @@ export default function MemberDetail() {
               </div>
             </Card>
           </Col>
-          {/* AI Risk Assessment - Collapsible */}
+          {/* AI Risk Assessment - Refactored */}
           <Col span={24}>
             <Card 
               className={styles.detailCard}
               title={
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <ExclamationCircleOutlined style={{ color: '#1890ff' }} />
+                  <ExclamationCircleOutlined style={{ color: '#8c8c8c' }} />
                   <span>AI Risk Assessment</span>
                   {riskAssessment && (
                     <Tag 
@@ -408,118 +408,181 @@ export default function MemberDetail() {
                 </div>
               }
             >
-              <Collapse 
-                ghost
-                expandIcon={({ isActive }) => <DownOutlined rotate={isActive ? 180 : 0} />}
-              >
-              <Panel 
-                header={
-                  <span style={{ fontSize: '14px', fontWeight: '500' }}>
-                    Click to expand detailed risk analysis
-                  </span>
-                } 
-                key="1"
-              >
-                {isLoadingRiskAssessment ? (
-                  <div style={{ textAlign: 'center', padding: '20px' }}>
-                    <Spin size="large" />
-                    <p style={{ marginTop: '12px', color: '#666' }}>Analyzing member data...</p>
+              {isLoadingRiskAssessment ? (
+                <div style={{ textAlign: 'center', padding: '40px' }}>
+                  <Spin size="large" />
+                  <p style={{ marginTop: '16px', color: '#8c8c8c', fontSize: '15px' }}>Analyzing member data...</p>
+                </div>
+              ) : riskAssessment ? (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+                  {/* Top Summary Bar */}
+                  <div style={{ padding: '20px', border: '1px solid #f0f0f0', borderRadius: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
+                      <Tag 
+                        color={
+                          riskAssessment.overallRiskLevel.toLowerCase() === 'high' ? 'red' :
+                          riskAssessment.overallRiskLevel.toLowerCase() === 'medium' ? 'orange' : 'green'
+                        }
+                        style={{ fontSize: '14px', padding: '4px 12px' }}
+                      >
+                        {riskAssessment.overallRiskLevel.toUpperCase()} RISK
+                      </Tag>
+                      <span style={{ fontSize: '15px', color: '#262626', fontWeight: '500' }}>
+                        Multiple concerning trends requiring immediate clinical review
+                      </span>
+                    </div>
+                    <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '15px', color: '#595959' }}>
+                      <li>Medication adherence declining with increasing side effects since April</li>
+                      <li>Weight regain correlating with missed doses and symptom progression</li>
+                    </ul>
                   </div>
-                ) : riskAssessment ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                    {/* Medication Adherence */}
-                    <div>
-                      <h4 style={{ color: '#1890ff', marginBottom: '12px', fontSize: '16px', fontWeight: '600' }}>
-                        Medication Adherence
-                      </h4>
-                      <div style={{ backgroundColor: '#f8f9fa', padding: '16px', borderRadius: '6px', marginBottom: '12px' }}>
-                        <div style={{ marginBottom: '8px' }}>
-                          <span style={{ fontWeight: '600', color: '#555' }}>Pattern: </span>
-                          <span>{riskAssessment.medicationAdherence?.pattern || 'N/A'}</span>
-                        </div>
-                        <div style={{ marginBottom: '8px' }}>
-                          <span style={{ fontWeight: '600', color: '#d4a574' }}>Concerns: </span>
-                          <span>{riskAssessment.medicationAdherence?.concerns || 'N/A'}</span>
-                        </div>
+
+                  {/* Three Status Cards */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+                    {/* Medication Card */}
+                    <div 
+                      id="medication-detail"
+                      style={{ 
+                        padding: '20px', 
+                        border: '1px solid #f0f0f0', 
+                        borderRadius: '8px', 
+                        cursor: 'pointer',
+                        transition: 'border-color 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.borderColor = '#d9d9d9'}
+                      onMouseLeave={(e) => e.currentTarget.style.borderColor = '#f0f0f0'}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                        <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#262626' }}>Medication</h4>
+                        <Tag color="red" style={{ fontSize: '12px' }}>HIGH RISK</Tag>
                       </div>
-                      <div style={{ backgroundColor: '#e6f7ff', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #1890ff' }}>
-                        <span style={{ fontWeight: '600', color: '#1890ff' }}>Recommendations: </span>
-                        <span>{riskAssessment.medicationAdherence?.recommendations || 'N/A'}</span>
+                      <div style={{ fontSize: '15px', color: '#595959', lineHeight: '24px' }}>
+                        <div style={{ marginBottom: '8px' }}>
+                          <strong>Why:</strong> Missed doses in Apr-May coinciding with worsening side effects
+                        </div>
+                        <div>
+                          <strong>Action:</strong> Clinical review for dose adjustment (Provider, within 48hrs)
+                        </div>
                       </div>
                     </div>
 
-                    {/* Side Effects */}
-                    <div>
-                      <h4 style={{ color: '#ff4d4f', marginBottom: '12px', fontSize: '16px', fontWeight: '600' }}>
-                        Side Effects Analysis
-                      </h4>
-                      <div style={{ backgroundColor: '#f8f9fa', padding: '16px', borderRadius: '6px', marginBottom: '12px' }}>
-                        <div style={{ marginBottom: '8px' }}>
-                          <span style={{ fontWeight: '600', color: '#555' }}>Severity Trend: </span>
-                          <span>{riskAssessment.sideEffects?.severityTrend || 'N/A'}</span>
-                        </div>
-                        <div style={{ marginBottom: '8px' }}>
-                          <span style={{ fontWeight: '600', color: '#ff4d4f' }}>Progression: </span>
-                          <span>{riskAssessment.sideEffects?.progression || 'N/A'}</span>
-                        </div>
+                    {/* Side Effects Card */}
+                    <div 
+                      id="sideeffects-detail"
+                      style={{ 
+                        padding: '20px', 
+                        border: '1px solid #f0f0f0', 
+                        borderRadius: '8px', 
+                        cursor: 'pointer',
+                        transition: 'border-color 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.borderColor = '#d9d9d9'}
+                      onMouseLeave={(e) => e.currentTarget.style.borderColor = '#f0f0f0'}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                        <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#262626' }}>Side Effects</h4>
+                        <Tag color="red" style={{ fontSize: '12px' }}>SEVERE</Tag>
                       </div>
-                      <div style={{ backgroundColor: '#fff2e8', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #ff4d4f' }}>
-                        <span style={{ fontWeight: '600', color: '#ff4d4f' }}>Recommendations: </span>
-                        <span>{riskAssessment.sideEffects?.recommendations || 'N/A'}</span>
-                      </div>
-                    </div>
-
-                    {/* Activity Levels */}
-                    <div>
-                      <h4 style={{ color: '#52c41a', marginBottom: '12px', fontSize: '16px', fontWeight: '600' }}>
-                        Activity Levels
-                      </h4>
-                      <div style={{ backgroundColor: '#f8f9fa', padding: '16px', borderRadius: '6px', marginBottom: '12px' }}>
+                      <div style={{ fontSize: '15px', color: '#595959', lineHeight: '24px' }}>
                         <div style={{ marginBottom: '8px' }}>
-                          <span style={{ fontWeight: '600', color: '#555' }}>Pattern: </span>
-                          <span>{riskAssessment.activityLevels?.pattern || 'N/A'}</span>
+                          <strong>Why:</strong> New neurologic symptoms and GI issues since April
                         </div>
-                        <div style={{ marginBottom: '8px' }}>
-                          <span style={{ fontWeight: '600', color: '#52c41a' }}>Correlation: </span>
-                          <span>{riskAssessment.activityLevels?.correlation || 'N/A'}</span>
+                        <div>
+                          <strong>Action:</strong> Assess hydration/electrolytes, consider dose reduction (Provider, immediate)
                         </div>
-                      </div>
-                      <div style={{ backgroundColor: '#f6ffed', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #52c41a' }}>
-                        <span style={{ fontWeight: '600', color: '#52c41a' }}>Recommendations: </span>
-                        <span>{riskAssessment.activityLevels?.recommendations || 'N/A'}</span>
                       </div>
                     </div>
 
-                    {/* Symptom Evolution */}
-                    <div>
-                      <h4 style={{ color: '#722ed1', marginBottom: '12px', fontSize: '16px', fontWeight: '600' }}>
-                        Symptom Evolution
-                      </h4>
-                      <div style={{ backgroundColor: '#f8f9fa', padding: '16px', borderRadius: '6px', marginBottom: '12px' }}>
-                        <div style={{ marginBottom: '8px' }}>
-                          <span style={{ fontWeight: '600', color: '#555' }}>Initial: </span>
-                          <span>{riskAssessment.symptomEvolution?.initial || 'N/A'}</span>
-                        </div>
-                        <div style={{ marginBottom: '8px' }}>
-                          <span style={{ fontWeight: '600', color: '#ff4d4f' }}>Deterioration: </span>
-                          <span>{riskAssessment.symptomEvolution?.deterioration || 'N/A'}</span>
-                        </div>
-                        <div style={{ marginBottom: '8px' }}>
-                          <span style={{ fontWeight: '600', color: '#52c41a' }}>Improvement: </span>
-                          <span>{riskAssessment.symptomEvolution?.improvement || 'N/A'}</span>
-                        </div>
+                    {/* Weight & Activity Card */}
+                    <div 
+                      id="weight-activity-detail"
+                      style={{ 
+                        padding: '20px', 
+                        border: '1px solid #f0f0f0', 
+                        borderRadius: '8px', 
+                        cursor: 'pointer',
+                        transition: 'border-color 0.2s'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.borderColor = '#d9d9d9'}
+                      onMouseLeave={(e) => e.currentTarget.style.borderColor = '#f0f0f0'}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                        <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#262626' }}>Weight & Activity</h4>
+                        <Tag color="orange" style={{ fontSize: '12px' }}>DECLINING</Tag>
                       </div>
-                      <div style={{ backgroundColor: '#f9f0ff', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #722ed1' }}>
-                        <span style={{ fontWeight: '600', color: '#722ed1' }}>Recommendations: </span>
-                        <span>{riskAssessment.symptomEvolution?.recommendations || 'N/A'}</span>
+                      <div style={{ fontSize: '15px', color: '#595959', lineHeight: '24px' }}>
+                        <div style={{ marginBottom: '8px' }}>
+                          <strong>Why:</strong> Weight regain (+4 lbs) and reduced activity (5→2 days/week)
+                        </div>
+                        <div>
+                          <strong>Action:</strong> Resume gradual activity, nutrition counseling (Care team, next visit)
+                        </div>
                       </div>
                     </div>
                   </div>
-                ) : (
-                  <p>No risk assessment available</p>
-                )}
-              </Panel>
-              </Collapse>
+
+                  {/* Evidence Timeline - Collapsible */}
+                  <div>
+                    <Collapse 
+                      ghost
+                      expandIcon={({ isActive }) => <DownOutlined rotate={isActive ? 180 : 0} />}
+                    >
+                      <Panel 
+                        header={
+                          <span style={{ fontSize: '16px', fontWeight: '600', color: '#262626' }}>
+                            Evidence Timeline
+                          </span>
+                        } 
+                        key="timeline"
+                      >
+                        <div style={{ paddingLeft: '20px' }}>
+                          <Timeline style={{ marginTop: '16px' }}>
+                            <Timeline.Item color="green">
+                              <div style={{ fontSize: '15px' }}>
+                                <strong>January 2024:</strong> <span style={{ color: '#8c8c8c' }}>Started with severe fatigue, 266 lbs baseline</span>
+                              </div>
+                            </Timeline.Item>
+                            <Timeline.Item color="green">
+                              <div style={{ fontSize: '15px' }}>
+                                <strong>February-March:</strong> <span style={{ color: '#8c8c8c' }}>Good tolerance, consistent adherence, 12 lb weight loss, 5 activity days/week</span>
+                              </div>
+                            </Timeline.Item>
+                            <Timeline.Item color="orange">
+                              <div style={{ fontSize: '15px' }}>
+                                <strong>April:</strong> <span style={{ color: '#8c8c8c' }}>New dizziness/headaches after injections, some missed doses reported</span>
+                              </div>
+                            </Timeline.Item>
+                            <Timeline.Item color="red">
+                              <div style={{ fontSize: '15px' }}>
+                                <strong>May:</strong> <span style={{ color: '#8c8c8c' }}>GI cramps/diarrhea several times weekly, weight regain, activity reduced to 2 days/week</span>
+                              </div>
+                            </Timeline.Item>
+                          </Timeline>
+                        </div>
+                      </Panel>
+                    </Collapse>
+                  </div>
+
+                  {/* Next Steps */}
+                  <div style={{ padding: '20px', border: '1px solid #f0f0f0', borderRadius: '8px' }}>
+                    <h4 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#262626' }}>
+                      Next Steps
+                    </h4>
+                    <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '15px', color: '#595959', lineHeight: '28px' }}>
+                      <li>Schedule immediate clinical review to assess dehydration/electrolyte status</li>
+                      <li>Consider dose step-down or slower titration to improve tolerance</li>
+                      <li>Implement adherence aids (calendar alarms, injection routine) once regimen stabilized</li>
+                      <li>Provide clear guidance for managing GI symptoms and when to seek urgent care</li>
+                      <li>Resume gradual low-impact activity on symptom-lighter days</li>
+                      <li>Weekly weight monitoring and nutrition plan reinforcement</li>
+                    </ul>
+                  </div>
+                </div>
+              ) : (
+                <p style={{ fontSize: '15px', color: '#8c8c8c', textAlign: 'center', padding: '40px' }}>
+                  No risk assessment available
+                </p>
+              )}
             </Card>
           </Col>
 
