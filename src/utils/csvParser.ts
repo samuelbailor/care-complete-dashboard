@@ -72,7 +72,13 @@ function parseCSVLine(line: string): string[] {
     const char = line[i];
     
     if (char === '"') {
-      inQuotes = !inQuotes;
+      if (inQuotes && i + 1 < line.length && line[i + 1] === '"') {
+        // Handle escaped quotes ("")
+        current += '"';
+        i++; // Skip the next quote
+      } else {
+        inQuotes = !inQuotes;
+      }
     } else if (char === ',' && !inQuotes) {
       result.push(current);
       current = '';
@@ -178,7 +184,10 @@ function parseWeight(weightStr: string): number {
 
 function parseHeight(heightStr: string): number {
   // Parse height like "5'9"" - extract feet and inches
-  const match = heightStr.match(/(\d+)'(\d+)"/);
+  // Remove any outer quotes and handle nested quotes
+  const cleanHeight = heightStr.replace(/^"|"$/g, '');
+  
+  const match = cleanHeight.match(/(\d+)'(\d+)"/);
   if (match) {
     const feet = parseInt(match[1]);
     const inches = parseInt(match[2]);
