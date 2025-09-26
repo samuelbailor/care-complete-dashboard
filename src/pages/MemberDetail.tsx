@@ -377,7 +377,7 @@ export default function MemberDetail() {
               </div>
             </Card>
           </Col>
-          {/* AI Risk Assessment - Refactored */}
+          {/* AI Risk Assessment - Refactored & Collapsible */}
           <Col span={24}>
             <Card 
               className={styles.detailCard}
@@ -414,170 +414,184 @@ export default function MemberDetail() {
                   <p style={{ marginTop: '16px', color: '#8c8c8c', fontSize: '15px' }}>Analyzing member data...</p>
                 </div>
               ) : riskAssessment ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-                  {/* Top Summary Bar */}
-                  <div style={{ padding: '20px', border: '1px solid #f0f0f0', borderRadius: '8px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
-                      <Tag 
-                        color={
-                          riskAssessment.overallRiskLevel.toLowerCase() === 'high' ? 'red' :
-                          riskAssessment.overallRiskLevel.toLowerCase() === 'medium' ? 'orange' : 'green'
-                        }
-                        style={{ fontSize: '14px', padding: '4px 12px' }}
-                      >
-                        {riskAssessment.overallRiskLevel.toUpperCase()} RISK
-                      </Tag>
-                      <span style={{ fontSize: '15px', color: '#262626', fontWeight: '500' }}>
-                        Multiple concerning trends requiring immediate clinical review
+                <Collapse 
+                  ghost
+                  expandIcon={({ isActive }) => <DownOutlined rotate={isActive ? 180 : 0} />}
+                >
+                  <Panel 
+                    header={
+                      <span style={{ fontSize: '15px', fontWeight: '500', color: '#595959' }}>
+                        Click to view detailed risk analysis
                       </span>
-                    </div>
-                    <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '15px', color: '#595959' }}>
-                      <li>Medication adherence declining with increasing side effects since April</li>
-                      <li>Weight regain correlating with missed doses and symptom progression</li>
-                    </ul>
-                  </div>
-
-                  {/* Three Status Cards */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
-                    {/* Medication Card */}
-                    <div 
-                      id="medication-detail"
-                      style={{ 
-                        padding: '20px', 
-                        border: '1px solid #f0f0f0', 
-                        borderRadius: '8px', 
-                        cursor: 'pointer',
-                        transition: 'border-color 0.2s'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.borderColor = '#d9d9d9'}
-                      onMouseLeave={(e) => e.currentTarget.style.borderColor = '#f0f0f0'}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                        <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#262626' }}>Medication</h4>
-                        <Tag color="red" style={{ fontSize: '12px' }}>HIGH RISK</Tag>
-                      </div>
-                      <div style={{ fontSize: '15px', color: '#595959', lineHeight: '24px' }}>
-                        <div style={{ marginBottom: '8px' }}>
-                          <strong>Why:</strong> Missed doses in Apr-May coinciding with worsening side effects
-                        </div>
-                        <div>
-                          <strong>Action:</strong> Clinical review for dose adjustment (Provider, within 48hrs)
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Side Effects Card */}
-                    <div 
-                      id="sideeffects-detail"
-                      style={{ 
-                        padding: '20px', 
-                        border: '1px solid #f0f0f0', 
-                        borderRadius: '8px', 
-                        cursor: 'pointer',
-                        transition: 'border-color 0.2s'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.borderColor = '#d9d9d9'}
-                      onMouseLeave={(e) => e.currentTarget.style.borderColor = '#f0f0f0'}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                        <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#262626' }}>Side Effects</h4>
-                        <Tag color="red" style={{ fontSize: '12px' }}>SEVERE</Tag>
-                      </div>
-                      <div style={{ fontSize: '15px', color: '#595959', lineHeight: '24px' }}>
-                        <div style={{ marginBottom: '8px' }}>
-                          <strong>Why:</strong> New neurologic symptoms and GI issues since April
-                        </div>
-                        <div>
-                          <strong>Action:</strong> Assess hydration/electrolytes, consider dose reduction (Provider, immediate)
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Weight & Activity Card */}
-                    <div 
-                      id="weight-activity-detail"
-                      style={{ 
-                        padding: '20px', 
-                        border: '1px solid #f0f0f0', 
-                        borderRadius: '8px', 
-                        cursor: 'pointer',
-                        transition: 'border-color 0.2s'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.borderColor = '#d9d9d9'}
-                      onMouseLeave={(e) => e.currentTarget.style.borderColor = '#f0f0f0'}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-                        <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#262626' }}>Weight & Activity</h4>
-                        <Tag color="orange" style={{ fontSize: '12px' }}>DECLINING</Tag>
-                      </div>
-                      <div style={{ fontSize: '15px', color: '#595959', lineHeight: '24px' }}>
-                        <div style={{ marginBottom: '8px' }}>
-                          <strong>Why:</strong> Weight regain (+4 lbs) and reduced activity (5→2 days/week)
-                        </div>
-                        <div>
-                          <strong>Action:</strong> Resume gradual activity, nutrition counseling (Care team, next visit)
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Evidence Timeline - Collapsible */}
-                  <div>
-                    <Collapse 
-                      ghost
-                      expandIcon={({ isActive }) => <DownOutlined rotate={isActive ? 180 : 0} />}
-                    >
-                      <Panel 
-                        header={
-                          <span style={{ fontSize: '16px', fontWeight: '600', color: '#262626' }}>
-                            Evidence Timeline
+                    } 
+                    key="main-content"
+                  >
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+                      {/* Top Summary Bar */}
+                      <div style={{ padding: '20px', border: '1px solid #f0f0f0', borderRadius: '8px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
+                          <Tag 
+                            color={
+                              riskAssessment.overallRiskLevel.toLowerCase() === 'high' ? 'red' :
+                              riskAssessment.overallRiskLevel.toLowerCase() === 'medium' ? 'orange' : 'green'
+                            }
+                            style={{ fontSize: '14px', padding: '4px 12px' }}
+                          >
+                            {riskAssessment.overallRiskLevel.toUpperCase()} RISK
+                          </Tag>
+                          <span style={{ fontSize: '15px', color: '#262626', fontWeight: '500' }}>
+                            Multiple concerning trends requiring immediate clinical review
                           </span>
-                        } 
-                        key="timeline"
-                      >
-                        <div style={{ paddingLeft: '20px' }}>
-                          <Timeline style={{ marginTop: '16px' }}>
-                            <Timeline.Item color="green">
-                              <div style={{ fontSize: '15px' }}>
-                                <strong>January 2024:</strong> <span style={{ color: '#8c8c8c' }}>Started with severe fatigue, 266 lbs baseline</span>
-                              </div>
-                            </Timeline.Item>
-                            <Timeline.Item color="green">
-                              <div style={{ fontSize: '15px' }}>
-                                <strong>February-March:</strong> <span style={{ color: '#8c8c8c' }}>Good tolerance, consistent adherence, 12 lb weight loss, 5 activity days/week</span>
-                              </div>
-                            </Timeline.Item>
-                            <Timeline.Item color="orange">
-                              <div style={{ fontSize: '15px' }}>
-                                <strong>April:</strong> <span style={{ color: '#8c8c8c' }}>New dizziness/headaches after injections, some missed doses reported</span>
-                              </div>
-                            </Timeline.Item>
-                            <Timeline.Item color="red">
-                              <div style={{ fontSize: '15px' }}>
-                                <strong>May:</strong> <span style={{ color: '#8c8c8c' }}>GI cramps/diarrhea several times weekly, weight regain, activity reduced to 2 days/week</span>
-                              </div>
-                            </Timeline.Item>
-                          </Timeline>
                         </div>
-                      </Panel>
-                    </Collapse>
-                  </div>
+                        <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '15px', color: '#595959' }}>
+                          <li>Medication adherence declining with increasing side effects since April</li>
+                          <li>Weight regain correlating with missed doses and symptom progression</li>
+                        </ul>
+                      </div>
 
-                  {/* Next Steps */}
-                  <div style={{ padding: '20px', border: '1px solid #f0f0f0', borderRadius: '8px' }}>
-                    <h4 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#262626' }}>
-                      Next Steps
-                    </h4>
-                    <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '15px', color: '#595959', lineHeight: '28px' }}>
-                      <li>Schedule immediate clinical review to assess dehydration/electrolyte status</li>
-                      <li>Consider dose step-down or slower titration to improve tolerance</li>
-                      <li>Implement adherence aids (calendar alarms, injection routine) once regimen stabilized</li>
-                      <li>Provide clear guidance for managing GI symptoms and when to seek urgent care</li>
-                      <li>Resume gradual low-impact activity on symptom-lighter days</li>
-                      <li>Weekly weight monitoring and nutrition plan reinforcement</li>
-                    </ul>
-                  </div>
-                </div>
+                      {/* Three Status Cards */}
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+                        {/* Medication Card */}
+                        <div 
+                          id="medication-detail"
+                          style={{ 
+                            padding: '20px', 
+                            border: '1px solid #f0f0f0', 
+                            borderRadius: '8px', 
+                            cursor: 'pointer',
+                            transition: 'border-color 0.2s'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.borderColor = '#d9d9d9'}
+                          onMouseLeave={(e) => e.currentTarget.style.borderColor = '#f0f0f0'}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                            <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#262626' }}>Medication</h4>
+                            <Tag color="red" style={{ fontSize: '12px' }}>HIGH RISK</Tag>
+                          </div>
+                          <div style={{ fontSize: '15px', color: '#595959', lineHeight: '24px' }}>
+                            <div style={{ marginBottom: '8px' }}>
+                              <strong>Why:</strong> Missed doses in Apr-May coinciding with worsening side effects
+                            </div>
+                            <div>
+                              <strong>Action:</strong> Clinical review for dose adjustment (Provider, within 48hrs)
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Side Effects Card */}
+                        <div 
+                          id="sideeffects-detail"
+                          style={{ 
+                            padding: '20px', 
+                            border: '1px solid #f0f0f0', 
+                            borderRadius: '8px', 
+                            cursor: 'pointer',
+                            transition: 'border-color 0.2s'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.borderColor = '#d9d9d9'}
+                          onMouseLeave={(e) => e.currentTarget.style.borderColor = '#f0f0f0'}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                            <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#262626' }}>Side Effects</h4>
+                            <Tag color="red" style={{ fontSize: '12px' }}>SEVERE</Tag>
+                          </div>
+                          <div style={{ fontSize: '15px', color: '#595959', lineHeight: '24px' }}>
+                            <div style={{ marginBottom: '8px' }}>
+                              <strong>Why:</strong> New neurologic symptoms and GI issues since April
+                            </div>
+                            <div>
+                              <strong>Action:</strong> Assess hydration/electrolytes, consider dose reduction (Provider, immediate)
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Weight & Activity Card */}
+                        <div 
+                          id="weight-activity-detail"
+                          style={{ 
+                            padding: '20px', 
+                            border: '1px solid #f0f0f0', 
+                            borderRadius: '8px', 
+                            cursor: 'pointer',
+                            transition: 'border-color 0.2s'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.borderColor = '#d9d9d9'}
+                          onMouseLeave={(e) => e.currentTarget.style.borderColor = '#f0f0f0'}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+                            <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#262626' }}>Weight & Activity</h4>
+                            <Tag color="orange" style={{ fontSize: '12px' }}>DECLINING</Tag>
+                          </div>
+                          <div style={{ fontSize: '15px', color: '#595959', lineHeight: '24px' }}>
+                            <div style={{ marginBottom: '8px' }}>
+                              <strong>Why:</strong> Weight regain (+4 lbs) and reduced activity (5→2 days/week)
+                            </div>
+                            <div>
+                              <strong>Action:</strong> Resume gradual activity, nutrition counseling (Care team, next visit)
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Evidence Timeline - Collapsible */}
+                      <div>
+                        <Collapse 
+                          ghost
+                          expandIcon={({ isActive }) => <DownOutlined rotate={isActive ? 180 : 0} />}
+                        >
+                          <Panel 
+                            header={
+                              <span style={{ fontSize: '16px', fontWeight: '600', color: '#262626' }}>
+                                Evidence Timeline
+                              </span>
+                            } 
+                            key="timeline"
+                          >
+                            <div style={{ paddingLeft: '20px' }}>
+                              <Timeline style={{ marginTop: '16px' }}>
+                                <Timeline.Item color="green">
+                                  <div style={{ fontSize: '15px' }}>
+                                    <strong>January 2024:</strong> <span style={{ color: '#8c8c8c' }}>Started with severe fatigue, 266 lbs baseline</span>
+                                  </div>
+                                </Timeline.Item>
+                                <Timeline.Item color="green">
+                                  <div style={{ fontSize: '15px' }}>
+                                    <strong>February-March:</strong> <span style={{ color: '#8c8c8c' }}>Good tolerance, consistent adherence, 12 lb weight loss, 5 activity days/week</span>
+                                  </div>
+                                </Timeline.Item>
+                                <Timeline.Item color="orange">
+                                  <div style={{ fontSize: '15px' }}>
+                                    <strong>April:</strong> <span style={{ color: '#8c8c8c' }}>New dizziness/headaches after injections, some missed doses reported</span>
+                                  </div>
+                                </Timeline.Item>
+                                <Timeline.Item color="red">
+                                  <div style={{ fontSize: '15px' }}>
+                                    <strong>May:</strong> <span style={{ color: '#8c8c8c' }}>GI cramps/diarrhea several times weekly, weight regain, activity reduced to 2 days/week</span>
+                                  </div>
+                                </Timeline.Item>
+                              </Timeline>
+                            </div>
+                          </Panel>
+                        </Collapse>
+                      </div>
+
+                      {/* Next Steps */}
+                      <div style={{ padding: '20px', border: '1px solid #f0f0f0', borderRadius: '8px' }}>
+                        <h4 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '600', color: '#262626' }}>
+                          Next Steps
+                        </h4>
+                        <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '15px', color: '#595959', lineHeight: '28px' }}>
+                          <li>Schedule immediate clinical review to assess dehydration/electrolyte status</li>
+                          <li>Consider dose step-down or slower titration to improve tolerance</li>
+                          <li>Implement adherence aids (calendar alarms, injection routine) once regimen stabilized</li>
+                          <li>Provide clear guidance for managing GI symptoms and when to seek urgent care</li>
+                          <li>Resume gradual low-impact activity on symptom-lighter days</li>
+                          <li>Weekly weight monitoring and nutrition plan reinforcement</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </Panel>
+                </Collapse>
               ) : (
                 <p style={{ fontSize: '15px', color: '#8c8c8c', textAlign: 'center', padding: '40px' }}>
                   No risk assessment available
