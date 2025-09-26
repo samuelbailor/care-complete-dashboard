@@ -171,12 +171,13 @@ export function aggregateMemberData(surveys: SurveyResponse[]): MemberProfile[] 
 }
 
 function parseWeight(weightStr: string): number {
-  const match = weightStr.match(/(\d+)/);
-  return match ? parseInt(match[1]) : 0;
+  // Parse weight like "232 lbs" - extract number before "lbs"
+  const match = weightStr.match(/(\d+(?:\.\d+)?)\s*lbs?/i);
+  return match ? parseFloat(match[1]) : 0;
 }
 
 function parseHeight(heightStr: string): number {
-  // Parse height like "5'9"" or "5'4""
+  // Parse height like "5'9"" - extract feet and inches
   const match = heightStr.match(/(\d+)'(\d+)"/);
   if (match) {
     const feet = parseInt(match[1]);
