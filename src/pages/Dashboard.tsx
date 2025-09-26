@@ -9,7 +9,7 @@ import {
   FileTextOutlined
 } from "@ant-design/icons";
 import { MembersTable } from "@/components/MembersTable";
-import { surveyMembers } from "@/data/surveyMembers";
+import { programData } from "@/data/surveyMembers";
 import { MemberProfile } from "@/utils/csvParser";
 import { supabase } from "@/integrations/supabase/client";
 import styles from "./Dashboard.module.css";
@@ -17,13 +17,16 @@ import styles from "./Dashboard.module.css";
 const { Option } = Select;
 
 export default function Dashboard() {
+  const [selectedProgram, setSelectedProgram] = useState<keyof typeof programData>("GLP-1 Weight Management Program");
   const [sortBy, setSortBy] = useState<"risk" | "compliance" | "weightLoss">("risk");
   const [filterRisk, setFilterRisk] = useState<"All" | "High" | "Medium" | "Low">("All");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [summary, setSummary] = useState('');
 
-  const sortedMembers = [...surveyMembers]
+  const currentMembers = programData[selectedProgram].members;
+
+  const sortedMembers = [...currentMembers]
     .filter(member => filterRisk === "All" || member.riskLevel === filterRisk)
     .sort((a, b) => {
       if (sortBy === "risk") {
@@ -43,9 +46,8 @@ export default function Dashboard() {
     setSummary('');
 
     try {
-      // Read the CSV file content
-      const response = await fetch('/src/data/survey-data.csv');
-      const csvText = await response.text();
+      // Use the CSV data for the selected program
+      const csvText = programData[selectedProgram].csvData;
 
       // Call the edge function
       const { data, error } = await supabase.functions.invoke('csv-summarizer', {
@@ -103,10 +105,10 @@ export default function Dashboard() {
   };
 
   const stats = {
-    totalMembers: surveyMembers.length,
-    highRisk: surveyMembers.filter(m => m.riskLevel === "High").length,
-    avgCompliance: Math.round(surveyMembers.reduce((acc, m) => acc + m.programCompliance, 0) / surveyMembers.length),
-    avgWeightLoss: Math.round(surveyMembers.reduce((acc, m) => acc + m.weightChange, 0) / surveyMembers.length * 10) / 10,
+    totalMembers: currentMembers.length,
+    highRisk: currentMembers.filter(m => m.riskLevel === "High").length,
+    avgCompliance: Math.round(currentMembers.reduce((acc, m) => acc + m.programCompliance, 0) / currentMembers.length),
+    avgWeightLoss: Math.round(currentMembers.reduce((acc, m) => acc + m.weightChange, 0) / currentMembers.length * 10) / 10,
   };
 
   return (
@@ -116,9 +118,18 @@ export default function Dashboard() {
         <div className={styles.headerContent}>
           <div>
             <h1 className={styles.headerTitle}>Care Complete</h1>
-            <p className={styles.headerSubtitle}>GLP-1 Weight Management Program</p>
+            <p className={styles.headerSubtitle}>{selectedProgram}</p>
           </div>
           <div className={styles.headerActions}>
+            <Select
+              value={selectedProgram}
+              onChange={(value) => setSelectedProgram(value)}
+              style={{ width: 280, marginRight: 16 }}
+              placeholder="Select Program"
+            >
+              <Option value="GLP-1 Weight Management Program">GLP-1 Weight Management Program</Option>
+              <Option value="Diabetes Management Program">Diabetes Management Program</Option>
+            </Select>
             <Button 
               type="primary" 
               icon={<FileTextOutlined />}
