@@ -28,6 +28,17 @@ export interface MemberProfile {
   lastSideEffects: string;
   averageActivity: number;
   prescriptionDuration: string;
+  // Additional detailed information
+  age: number;
+  gender: string;
+  glp1Medication: string;
+  fillHistory: Array<{date: string; medication: string; quantity: string}>;
+  otherMedications: string[];
+  paExpirationDate: string;
+  memberGoals: string[];
+  staffInteractions: Array<{date: string; type: string; notes: string}>;
+  surveyResponses: SurveyResponse[];
+  weightHistory: Array<{date: string; weight: number}>;
 }
 
 export function parseCSV(csvContent: string): SurveyResponse[] {
@@ -111,6 +122,17 @@ export function aggregateMemberData(surveys: SurveyResponse[]): MemberProfile[] 
     // Calculate risk level
     const riskLevel = calculateRiskLevel(complianceRate, weightChange, lastSurvey.hasSideEffects, avgActivity);
     
+    // Generate weight history from surveys
+    const weightHistory = memberSurveys.map(survey => ({
+      date: formatDate(survey.submittedAt),
+      weight: parseWeight(survey.currentWeight)
+    }));
+
+    // Mock additional data for detailed view
+    const glp1Medications = ['Semaglutide', 'Liraglutide', 'Dulaglutide', 'Exenatide'];
+    const genders = ['Male', 'Female'];
+    const goalOptions = ['Lose 20 lbs', 'Improve energy', 'Better glucose control', 'Reduce medication side effects'];
+    
     return {
       id: name.toLowerCase().replace(/\s+/g, '-'),
       name,
@@ -127,6 +149,23 @@ export function aggregateMemberData(surveys: SurveyResponse[]): MemberProfile[] 
       lastSideEffects: lastSurvey.hasSideEffects,
       averageActivity: Math.round(avgActivity * 10) / 10,
       prescriptionDuration: lastSurvey.prescriptionDuration,
+      // Additional detailed information
+      age: Math.floor(Math.random() * 30) + 30, // Random age between 30-60
+      gender: genders[Math.floor(Math.random() * genders.length)],
+      glp1Medication: glp1Medications[Math.floor(Math.random() * glp1Medications.length)],
+      fillHistory: [
+        { date: formatDate(firstSurvey.submittedAt), medication: 'Semaglutide', quantity: '30 day supply' },
+        { date: formatDate(lastSurvey.submittedAt), medication: 'Semaglutide', quantity: '30 day supply' }
+      ],
+      otherMedications: ['Metformin', 'Lisinopril'].slice(0, Math.floor(Math.random() * 3)),
+      paExpirationDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US'),
+      memberGoals: goalOptions.slice(0, Math.floor(Math.random() * 3) + 1),
+      staffInteractions: [
+        { date: formatDate(lastSurvey.submittedAt), type: 'Check-in Call', notes: 'Patient reports feeling well, no new side effects' },
+        { date: formatDate(firstSurvey.submittedAt), type: 'Initial Consultation', notes: 'Started GLP-1 therapy, discussed expectations' }
+      ],
+      surveyResponses: memberSurveys,
+      weightHistory
     };
   });
 }

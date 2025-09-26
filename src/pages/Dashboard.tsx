@@ -9,6 +9,7 @@ import {
   FileTextOutlined
 } from "@ant-design/icons";
 import { MembersTable } from "@/components/MembersTable";
+import { MemberDetailView } from "@/components/MemberDetailView";
 import { surveyMembers } from "@/data/surveyMembers";
 import { MemberProfile } from "@/utils/csvParser";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,6 +23,8 @@ export default function Dashboard() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [summary, setSummary] = useState('');
+  const [selectedMember, setSelectedMember] = useState<MemberProfile | null>(null);
+  const [isDetailViewVisible, setIsDetailViewVisible] = useState(false);
 
   const sortedMembers = [...surveyMembers]
     .filter(member => filterRisk === "All" || member.riskLevel === filterRisk)
@@ -37,8 +40,13 @@ export default function Dashboard() {
     });
 
   const handleMemberClick = (member: MemberProfile) => {
-    console.log("Selected member:", member);
-    // This could open a detailed view or navigate to member details
+    setSelectedMember(member);
+    setIsDetailViewVisible(true);
+  };
+
+  const handleDetailViewClose = () => {
+    setIsDetailViewVisible(false);
+    setSelectedMember(null);
   };
 
   const handleSummarizeCSV = async () => {
@@ -196,6 +204,13 @@ export default function Dashboard() {
           </div>
         )}
       </Modal>
+
+      {/* Member Detail View */}
+      <MemberDetailView
+        member={selectedMember}
+        visible={isDetailViewVisible}
+        onClose={handleDetailViewClose}
+      />
     </div>
   );
 }

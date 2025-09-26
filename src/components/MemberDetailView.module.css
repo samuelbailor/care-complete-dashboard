@@ -1,0 +1,216 @@
+.memberModal {
+  max-height: 90vh;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.headerIcon {
+  font-size: 18px;
+  color: var(--primary-color);
+}
+
+.memberName {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.riskTag {
+  font-weight: 600;
+}
+
+.detailCard {
+  height: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.detailCard .ant-card-head {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.detailCard .ant-card-head-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.infoGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.infoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.infoItem:last-child {
+  border-bottom: none;
+}
+
+.label {
+  font-weight: 500;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.value {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 14px;
+}
+
+.medicationSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.primaryMedication {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background-color: var(--background-light);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+}
+
+.otherMedications {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.medicationTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.progressSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.weightProgress {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background-color: var(--background-light);
+  border-radius: 6px;
+}
+
+.weightLoss {
+  color: var(--success-color);
+}
+
+.weightGain {
+  color: var(--error-color);
+}
+
+.complianceProgress {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.goalsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.goalItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.goalIcon {
+  color: var(--success-color);
+  font-size: 16px;
+}
+
+.fillHistory {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fillItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background-color: var(--background-light);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+}
+
+.fillDate {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 14px;
+}
+
+.fillDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.medication {
+  font-weight: 600;
+  color: var(--primary-color);
+  font-size: 14px;
+}
+
+.quantity {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.interactionItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.interactionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.interactionType {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 14px;
+}
+
+.interactionDate {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.interactionNotes {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
