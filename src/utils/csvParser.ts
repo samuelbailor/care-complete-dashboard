@@ -125,6 +125,18 @@ export function aggregateMemberData(surveys: SurveyResponse[]): MemberProfile[] 
     const heightInInches = parseHeight(lastSurvey.height);
     const bmi = calculateBMI(currentWeight, heightInInches);
     
+    // Debug: log the first member's full data
+    if (name === "Alex Johnson") {
+      console.log('Alex Johnson full member data:', {
+        name,
+        height: lastSurvey.height,
+        currentWeight: lastSurvey.currentWeight,
+        heightInInches,
+        currentWeightParsed: currentWeight,
+        bmi
+      });
+    }
+    
     // Calculate risk level
     const riskLevel = calculateRiskLevel(complianceRate, weightChange, lastSurvey.hasSideEffects, avgActivity);
     
@@ -197,8 +209,14 @@ function parseHeight(heightStr: string): number {
 }
 
 function calculateBMI(weightInPounds: number, heightInInches: number): number {
-  if (heightInInches === 0) return 0;
-  return (weightInPounds / (heightInInches * heightInInches)) * 703;
+  console.log('calculateBMI called with weight:', weightInPounds, 'height:', heightInInches);
+  if (heightInInches === 0) {
+    console.log('Height is 0, returning 0');
+    return 0;
+  }
+  const bmi = (weightInPounds / (heightInInches * heightInInches)) * 703;
+  console.log('BMI calculated:', bmi);
+  return bmi;
 }
 
 function calculateRiskLevel(compliance: number, weightChange: number, hasSideEffects: string, activity: number): "High" | "Medium" | "Low" {
