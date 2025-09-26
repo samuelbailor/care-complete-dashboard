@@ -379,55 +379,54 @@ export default function MemberDetail() {
           </Col>
           {/* AI Risk Assessment - Collapsible */}
           <Col span={24}>
-            <Collapse 
-              style={{ 
-                marginTop: '24px',
-                backgroundColor: '#fff',
-                border: '1px solid #d9d9d9',
-                borderRadius: '6px'
-              }}
-              expandIcon={({ isActive }) => <DownOutlined rotate={isActive ? 180 : 0} />}
+            <Card 
+              className={styles.detailCard}
+              title={
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <ExclamationCircleOutlined style={{ color: '#1890ff' }} />
+                  <span>AI Risk Assessment</span>
+                  {riskAssessment && (
+                    <Tag 
+                      color={
+                        riskAssessment.overallRiskLevel.toLowerCase() === 'high' ? 'red' :
+                        riskAssessment.overallRiskLevel.toLowerCase() === 'medium' ? 'orange' : 'green'
+                      }
+                    >
+                      {riskAssessment.overallRiskLevel.toUpperCase()} RISK
+                    </Tag>
+                  )}
+                  {riskAssessment && (
+                    <Tag 
+                      color={
+                        riskAssessment.outreachUrgency === 'IMMEDIATE' ? 'red' :
+                        riskAssessment.outreachUrgency === 'MODERATE' ? 'orange' : 'blue'
+                      }
+                    >
+                      {riskAssessment.outreachUrgency} OUTREACH
+                    </Tag>
+                  )}
+                </div>
+              }
             >
+              <Collapse 
+                ghost
+                expandIcon={({ isActive }) => <DownOutlined rotate={isActive ? 180 : 0} />}
+              >
               <Panel 
                 header={
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <ExclamationCircleOutlined style={{ color: '#1890ff' }} />
-                    <span style={{ fontSize: '16px', fontWeight: '600' }}>AI Risk Assessment</span>
-                    {riskAssessment && (
-                      <Tag 
-                        color={
-                          riskAssessment.overallRiskLevel.toLowerCase() === 'high' ? 'red' :
-                          riskAssessment.overallRiskLevel.toLowerCase() === 'medium' ? 'orange' : 'green'
-                        }
-                      >
-                        {riskAssessment.overallRiskLevel.toUpperCase()} RISK
-                      </Tag>
-                    )}
-                    {riskAssessment && (
-                      <Tag 
-                        color={
-                          riskAssessment.outreachUrgency === 'IMMEDIATE' ? 'red' :
-                          riskAssessment.outreachUrgency === 'MODERATE' ? 'orange' : 'blue'
-                        }
-                      >
-                        {riskAssessment.outreachUrgency} OUTREACH
-                      </Tag>
-                    )}
-                  </div>
+                  <span style={{ fontSize: '14px', fontWeight: '500' }}>
+                    Click to expand detailed risk analysis
+                  </span>
                 } 
                 key="1"
-                style={{ 
-                  backgroundColor: '#fafafa',
-                  border: 'none'
-                }}
               >
                 {isLoadingRiskAssessment ? (
-                  <div style={{ textAlign: 'center', padding: '40px' }}>
+                  <div style={{ textAlign: 'center', padding: '20px' }}>
                     <Spin size="large" />
-                    <p style={{ marginTop: '16px', color: '#666' }}>Analyzing member data...</p>
+                    <p style={{ marginTop: '12px', color: '#666' }}>Analyzing member data...</p>
                   </div>
                 ) : riskAssessment ? (
-                  <Row gutter={[16, 16]} style={{ padding: '16px 0' }}>
+                  <Row gutter={[16, 16]}>
                     {/* Medication Adherence */}
                     <Col span={12}>
                       <Card 
@@ -563,12 +562,13 @@ export default function MemberDetail() {
                     </Col>
                   </Row>
                 ) : (
-                  <p style={{ textAlign: 'center', color: '#666', fontStyle: 'italic', padding: '40px' }}>
+                  <p style={{ textAlign: 'center', color: '#666', fontStyle: 'italic', padding: '20px' }}>
                     No risk assessment data available
                   </p>
                 )}
               </Panel>
             </Collapse>
+            </Card>
           </Col>
 
           {/* Member Goals */}
