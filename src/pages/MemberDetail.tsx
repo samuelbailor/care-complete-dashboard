@@ -429,151 +429,97 @@ export default function MemberDetail() {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                     {/* Medication Adherence */}
                     <div>
-                      <h4 style={{ color: '#1890ff', marginBottom: '12px', fontSize: '16px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        💊 Medication Adherence
+                      <h4 style={{ color: '#1890ff', marginBottom: '12px', fontSize: '16px', fontWeight: '600' }}>
+                        Medication Adherence
                       </h4>
                       <div style={{ backgroundColor: '#f8f9fa', padding: '16px', borderRadius: '6px', marginBottom: '12px' }}>
                         <div style={{ marginBottom: '8px' }}>
-                          <span style={{ fontWeight: '600', color: '#555' }}>📊 Pattern: </span>
+                          <span style={{ fontWeight: '600', color: '#555' }}>Pattern: </span>
                           <span>{riskAssessment.medicationAdherence?.pattern || 'N/A'}</span>
                         </div>
                         <div style={{ marginBottom: '8px' }}>
-                          <span style={{ fontWeight: '600', color: '#d4a574' }}>⚠️ Concerns: </span>
+                          <span style={{ fontWeight: '600', color: '#d4a574' }}>Concerns: </span>
                           <span>{riskAssessment.medicationAdherence?.concerns || 'N/A'}</span>
                         </div>
                       </div>
                       <div style={{ backgroundColor: '#e6f7ff', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #1890ff' }}>
-                        <span style={{ fontWeight: '600', color: '#1890ff' }}>💡 Recommendations: </span>
+                        <span style={{ fontWeight: '600', color: '#1890ff' }}>Recommendations: </span>
                         <span>{riskAssessment.medicationAdherence?.recommendations || 'N/A'}</span>
                       </div>
                     </div>
 
                     {/* Side Effects */}
                     <div>
-                      <h4 style={{ color: '#ff4d4f', marginBottom: '12px', fontSize: '16px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        🩺 Side Effects Analysis
+                      <h4 style={{ color: '#ff4d4f', marginBottom: '12px', fontSize: '16px', fontWeight: '600' }}>
+                        Side Effects Analysis
                       </h4>
                       <div style={{ backgroundColor: '#f8f9fa', padding: '16px', borderRadius: '6px', marginBottom: '12px' }}>
                         <div style={{ marginBottom: '8px' }}>
-                          <span style={{ fontWeight: '600', color: '#555' }}>📈 Severity Trend: </span>
+                          <span style={{ fontWeight: '600', color: '#555' }}>Severity Trend: </span>
                           <span>{riskAssessment.sideEffects?.severityTrend || 'N/A'}</span>
                         </div>
                         <div style={{ marginBottom: '8px' }}>
-                          <span style={{ fontWeight: '600', color: '#d4a574' }}>📊 Progression: </span>
+                          <span style={{ fontWeight: '600', color: '#ff4d4f' }}>Progression: </span>
                           <span>{riskAssessment.sideEffects?.progression || 'N/A'}</span>
                         </div>
                       </div>
-                      <div style={{ backgroundColor: '#fff2f0', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #ff4d4f' }}>
-                        <span style={{ fontWeight: '600', color: '#ff4d4f' }}>🚨 Recommendations: </span>
+                      <div style={{ backgroundColor: '#fff2e8', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #ff4d4f' }}>
+                        <span style={{ fontWeight: '600', color: '#ff4d4f' }}>Recommendations: </span>
                         <span>{riskAssessment.sideEffects?.recommendations || 'N/A'}</span>
                       </div>
                     </div>
 
-                    {/* Weight Trends */}
+                    {/* Activity Levels */}
                     <div>
-                      <h4 style={{ color: '#52c41a', marginBottom: '12px', fontSize: '16px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        ⚖️ Weight Progress
+                      <h4 style={{ color: '#52c41a', marginBottom: '12px', fontSize: '16px', fontWeight: '600' }}>
+                        Activity Levels
                       </h4>
                       <div style={{ backgroundColor: '#f8f9fa', padding: '16px', borderRadius: '6px', marginBottom: '12px' }}>
-                        <Row gutter={[16, 8]}>
-                          <Col span={8}>
-                            <div style={{ textAlign: 'center' }}>
-                              <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>Baseline</div>
-                              <div style={{ fontSize: '18px', fontWeight: '600', color: '#555' }}>
-                                {riskAssessment.weightTrends?.baselineWeight || 'N/A'}
-                              </div>
-                            </div>
-                          </Col>
-                          <Col span={8}>
-                            <div style={{ textAlign: 'center' }}>
-                              <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>Current</div>
-                              <div style={{ fontSize: '18px', fontWeight: '600', color: '#555' }}>
-                                {riskAssessment.weightTrends?.currentWeight || 'N/A'}
-                              </div>
-                            </div>
-                          </Col>
-                          <Col span={8}>
-                            <div style={{ textAlign: 'center' }}>
-                              <div style={{ fontSize: '12px', color: '#666', marginBottom: '4px' }}>Total Change</div>
-                              <div style={{ 
-                                fontSize: '18px', 
-                                fontWeight: '600', 
-                                color: riskAssessment.weightTrends?.totalChange?.includes('-') ? '#52c41a' : '#ff4d4f' 
-                              }}>
-                                {riskAssessment.weightTrends?.totalChange || 'N/A'}
-                              </div>
-                            </div>
-                          </Col>
-                        </Row>
-                        <div style={{ marginTop: '12px' }}>
-                          <span style={{ fontWeight: '600', color: '#555' }}>📊 Pattern: </span>
-                          <span>{riskAssessment.weightTrends?.pattern || 'N/A'}</span>
+                        <div style={{ marginBottom: '8px' }}>
+                          <span style={{ fontWeight: '600', color: '#555' }}>Pattern: </span>
+                          <span>{riskAssessment.activityLevels?.pattern || 'N/A'}</span>
+                        </div>
+                        <div style={{ marginBottom: '8px' }}>
+                          <span style={{ fontWeight: '600', color: '#52c41a' }}>Correlation: </span>
+                          <span>{riskAssessment.activityLevels?.correlation || 'N/A'}</span>
                         </div>
                       </div>
                       <div style={{ backgroundColor: '#f6ffed', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #52c41a' }}>
-                        <span style={{ fontWeight: '600', color: '#52c41a' }}>💡 Recommendations: </span>
-                        <span>{riskAssessment.weightTrends?.recommendations || 'N/A'}</span>
+                        <span style={{ fontWeight: '600', color: '#52c41a' }}>Recommendations: </span>
+                        <span>{riskAssessment.activityLevels?.recommendations || 'N/A'}</span>
                       </div>
                     </div>
 
-                    {/* Activity & Symptoms */}
-                    <Row gutter={[20, 20]}>
-                      <Col span={12}>
-                        <div>
-                          <h4 style={{ color: '#722ed1', marginBottom: '12px', fontSize: '16px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            🏃‍♂️ Activity Levels
-                          </h4>
-                          <div style={{ backgroundColor: '#f8f9fa', padding: '16px', borderRadius: '6px', marginBottom: '12px' }}>
-                            <div style={{ marginBottom: '8px' }}>
-                              <span style={{ fontWeight: '600', color: '#555' }}>📊 Pattern: </span>
-                              <span>{riskAssessment.activityLevels?.pattern || 'N/A'}</span>
-                            </div>
-                            <div style={{ marginBottom: '8px' }}>
-                              <span style={{ fontWeight: '600', color: '#555' }}>🔗 Correlation: </span>
-                              <span>{riskAssessment.activityLevels?.correlation || 'N/A'}</span>
-                            </div>
-                          </div>
-                          <div style={{ backgroundColor: '#f9f0ff', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #722ed1' }}>
-                            <span style={{ fontWeight: '600', color: '#722ed1' }}>💡 Recommendations: </span>
-                            <span>{riskAssessment.activityLevels?.recommendations || 'N/A'}</span>
-                          </div>
+                    {/* Symptom Evolution */}
+                    <div>
+                      <h4 style={{ color: '#722ed1', marginBottom: '12px', fontSize: '16px', fontWeight: '600' }}>
+                        Symptom Evolution
+                      </h4>
+                      <div style={{ backgroundColor: '#f8f9fa', padding: '16px', borderRadius: '6px', marginBottom: '12px' }}>
+                        <div style={{ marginBottom: '8px' }}>
+                          <span style={{ fontWeight: '600', color: '#555' }}>Initial: </span>
+                          <span>{riskAssessment.symptomEvolution?.initial || 'N/A'}</span>
                         </div>
-                      </Col>
-                      
-                      <Col span={12}>
-                        <div>
-                          <h4 style={{ color: '#fa8c16', marginBottom: '12px', fontSize: '16px', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            📊 Symptom Timeline
-                          </h4>
-                          <div style={{ backgroundColor: '#f8f9fa', padding: '16px', borderRadius: '6px', marginBottom: '12px' }}>
-                            <div style={{ marginBottom: '8px' }}>
-                              <span style={{ fontWeight: '600', color: '#52c41a' }}>✅ Initial: </span>
-                              <span style={{ fontSize: '14px' }}>{riskAssessment.symptomEvolution?.initial || 'N/A'}</span>
-                            </div>
-                            <div style={{ marginBottom: '8px' }}>
-                              <span style={{ fontWeight: '600', color: '#52c41a' }}>📈 Improvement: </span>
-                              <span style={{ fontSize: '14px' }}>{riskAssessment.symptomEvolution?.improvement || 'N/A'}</span>
-                            </div>
-                            <div style={{ marginBottom: '8px' }}>
-                              <span style={{ fontWeight: '600', color: '#ff4d4f' }}>📉 Deterioration: </span>
-                              <span style={{ fontSize: '14px' }}>{riskAssessment.symptomEvolution?.deterioration || 'N/A'}</span>
-                            </div>
-                          </div>
-                          <div style={{ backgroundColor: '#fff7e6', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #fa8c16' }}>
-                            <span style={{ fontWeight: '600', color: '#fa8c16' }}>💡 Recommendations: </span>
-                            <span style={{ fontSize: '14px' }}>{riskAssessment.symptomEvolution?.recommendations || 'N/A'}</span>
-                          </div>
+                        <div style={{ marginBottom: '8px' }}>
+                          <span style={{ fontWeight: '600', color: '#ff4d4f' }}>Deterioration: </span>
+                          <span>{riskAssessment.symptomEvolution?.deterioration || 'N/A'}</span>
                         </div>
-                      </Col>
-                    </Row>
+                        <div style={{ marginBottom: '8px' }}>
+                          <span style={{ fontWeight: '600', color: '#52c41a' }}>Improvement: </span>
+                          <span>{riskAssessment.symptomEvolution?.improvement || 'N/A'}</span>
+                        </div>
+                      </div>
+                      <div style={{ backgroundColor: '#f9f0ff', padding: '12px', borderRadius: '6px', borderLeft: '4px solid #722ed1' }}>
+                        <span style={{ fontWeight: '600', color: '#722ed1' }}>Recommendations: </span>
+                        <span>{riskAssessment.symptomEvolution?.recommendations || 'N/A'}</span>
+                      </div>
+                    </div>
                   </div>
                 ) : (
-                  <p style={{ textAlign: 'center', color: '#666', fontStyle: 'italic', padding: '20px' }}>
-                    No risk assessment data available
-                  </p>
+                  <p>No risk assessment available</p>
                 )}
               </Panel>
-            </Collapse>
+              </Collapse>
             </Card>
           </Col>
 
