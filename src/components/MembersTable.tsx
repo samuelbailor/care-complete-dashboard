@@ -146,6 +146,29 @@ export function MembersTable({ members, onMemberClick }: MembersTableProps) {
       ),
     },
     {
+      title: 'BMI',
+      dataIndex: 'bmi',
+      key: 'bmi',
+      render: (bmi: number) => (
+        <div className={styles.bmiContainer}>
+          <span className={`${styles.bmiValue} ${
+            bmi < 18.5 ? styles.bmiUnderweight :
+            bmi < 25 ? styles.bmiNormal :
+            bmi < 30 ? styles.bmiOverweight :
+            styles.bmiObese
+          }`}>
+            {bmi}
+          </span>
+          <div className={styles.bmiCategory}>
+            {bmi < 18.5 ? 'Underweight' :
+             bmi < 25 ? 'Normal' :
+             bmi < 30 ? 'Overweight' :
+             'Obese'}
+          </div>
+        </div>
+      ),
+    },
+    {
       title: 'Duration',
       dataIndex: 'prescriptionDuration',
       key: 'prescriptionDuration',

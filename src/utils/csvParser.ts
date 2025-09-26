@@ -22,6 +22,7 @@ export interface MemberProfile {
   currentWeight: number;
   initialWeight: number;
   weightChange: number;
+  bmi: number;
   riskLevel: "High" | "Medium" | "Low";
   lastMedicationCompliance: string;
   lastSideEffects: string;
@@ -103,6 +104,10 @@ export function aggregateMemberData(surveys: SurveyResponse[]): MemberProfile[] 
     // Calculate average activity
     const avgActivity = memberSurveys.reduce((acc, s) => acc + s.activityDays, 0) / memberSurveys.length;
     
+    // Calculate BMI
+    const heightInInches = parseHeight(lastSurvey.height);
+    const bmi = calculateBMI(currentWeight, heightInInches);
+    
     // Calculate risk level
     const riskLevel = calculateRiskLevel(complianceRate, weightChange, lastSurvey.hasSideEffects, avgActivity);
     
@@ -116,6 +121,7 @@ export function aggregateMemberData(surveys: SurveyResponse[]): MemberProfile[] 
       currentWeight,
       initialWeight,
       weightChange: Math.round(weightChange * 10) / 10,
+      bmi: Math.round(bmi * 10) / 10,
       riskLevel,
       lastMedicationCompliance: lastSurvey.takingMedication,
       lastSideEffects: lastSurvey.hasSideEffects,
@@ -128,6 +134,22 @@ export function aggregateMemberData(surveys: SurveyResponse[]): MemberProfile[] 
 function parseWeight(weightStr: string): number {
   const match = weightStr.match(/(\d+)/);
   return match ? parseInt(match[1]) : 0;
+}
+
+function parseHeight(heightStr: string): number {
+  // Parse height like "5'9"" or "5'4""
+  const match = heightStr.match(/(\d+)'(\d+)"/);
+  if (match) {
+    const feet = parseInt(match[1]);
+    const inches = parseInt(match[2]);
+    return feet * 12 + inches;
+  }
+  return 0;
+}
+
+function calculateBMI(weightInPounds: number, heightInInches: number): number {
+  if (heightInInches === 0) return 0;
+  return (weightInPounds / (heightInInches * heightInInches)) * 703;
 }
 
 function calculateRiskLevel(compliance: number, weightChange: number, hasSideEffects: string, activity: number): "High" | "Medium" | "Low" {
