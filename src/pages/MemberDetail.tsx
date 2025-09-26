@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { Card, Row, Col, Tag, Timeline, Table, Progress, Input, Button } from "antd";
+import { Card, Row, Col, Tag, Timeline, Table, Progress, Input, Button, Spin } from "antd";
 import { 
   UserOutlined, 
   MedicineBoxOutlined, 
@@ -13,9 +13,45 @@ import {
   ArrowLeftOutlined,
   ExclamationCircleOutlined
 } from "@ant-design/icons";
-import { surveyMembers } from "@/data/surveyMembers";
+import { surveyMembers, programData } from "@/data/surveyMembers";
 import { MemberProfile } from "@/utils/csvParser";
+import { supabase } from "@/integrations/supabase/client";
 import styles from "./MemberDetail.module.css";
+
+// Risk assessment interface
+interface RiskAssessment {
+  patientName: string;
+  overallRiskLevel: string;
+  medicationAdherence: {
+    pattern: string;
+    concerns: string;
+    recommendations: string;
+  };
+  sideEffects: {
+    severityTrend: string;
+    progression: string;
+    recommendations: string;
+  };
+  weightTrends: {
+    baselineWeight: string;
+    currentWeight: string;
+    totalChange: string;
+    pattern: string;
+    recommendations: string;
+  };
+  activityLevels: {
+    pattern: string;
+    correlation: string;
+    recommendations: string;
+  };
+  symptomEvolution: {
+    initial: string;
+    deterioration: string;
+    improvement: string;
+    recommendations: string;
+  };
+  outreachUrgency: string;
+}
 
 // Function to consistently assign org based on member name
 const getRandomOrg = (memberName: string): string => {
@@ -36,13 +72,59 @@ export default function MemberDetail() {
   const [member, setMember] = useState<MemberProfile | null>(null);
   const [newGoal, setNewGoal] = useState("");
   const [additionalGoals, setAdditionalGoals] = useState<string[]>([]);
+  const [riskAssessment, setRiskAssessment] = useState<RiskAssessment | null>(null);
+  const [isLoadingRiskAssessment, setIsLoadingRiskAssessment] = useState(false);
 
   useEffect(() => {
     if (memberId) {
       const foundMember = surveyMembers.find(m => m.id === memberId);
       setMember(foundMember || null);
+      
+      // Fetch risk assessment for GLP-1 members
+      if (foundMember && foundMember.memberGoals.some(goal => 
+        goal.toLowerCase().includes('weight') || goal.toLowerCase().includes('glp')
+      )) {
+        fetchRiskAssessment(foundMember);
+      }
     }
   }, [memberId]);
+
+  const fetchRiskAssessment = async (memberProfile: MemberProfile) => {
+    setIsLoadingRiskAssessment(true);
+    try {
+      // Find the program this member belongs to
+      let csvData = '';
+      for (const [programName, program] of Object.entries(programData)) {
+        if (program.members.some(m => m.id === memberProfile.id)) {
+          // Filter CSV data to include only header and this member's rows
+          const lines = program.csvData.split('\n');
+          const header = lines[0];
+          const memberRows = lines.slice(1).filter(line => 
+            line.includes(memberProfile.name)
+          );
+          csvData = [header, ...memberRows].join('\n');
+          break;
+        }
+      }
+
+      if (!csvData) {
+        console.error('No CSV data found for member');
+        return;
+      }
+
+      const { data, error } = await supabase.functions.invoke('member-risk-assessment', {
+        body: { csvData }
+      });
+
+      if (error) throw error;
+      
+      setRiskAssessment(data);
+    } catch (error) {
+      console.error('Error fetching risk assessment:', error);
+    } finally {
+      setIsLoadingRiskAssessment(false);
+    }
+  };
 
   if (!member) {
     return (
@@ -294,6 +376,162 @@ export default function MemberDetail() {
               </div>
             </Card>
           </Col>
+
+          {/* AI Risk Assessment - only for GLP-1 members */}
+          {member.memberGoals.some(goal => 
+            goal.toLowerCase().includes('weight') || goal.toLowerCase().includes('glp')
+          ) && (
+            <Col span={24}>
+              <Card 
+                title={
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <ExclamationCircleOutlined />
+                    AI Risk Assessment
+                    {riskAssessment && (
+                      <Tag 
+                        color={
+                          riskAssessment.overallRiskLevel.toLowerCase() === 'high' ? 'red' :
+                          riskAssessment.overallRiskLevel.toLowerCase() === 'medium' ? 'orange' : 'green'
+                        }
+                      >
+                        {riskAssessment.overallRiskLevel.toUpperCase()} RISK
+                      </Tag>
+                    )}
+                    {riskAssessment && (
+                      <Tag 
+                        color={
+                          riskAssessment.outreachUrgency === 'IMMEDIATE' ? 'red' :
+                          riskAssessment.outreachUrgency === 'MODERATE' ? 'orange' : 'blue'
+                        }
+                      >
+                        {riskAssessment.outreachUrgency} OUTREACH
+                      </Tag>
+                    )}
+                  </div>
+                } 
+                className={styles.detailCard}
+                loading={isLoadingRiskAssessment}
+              >
+                {riskAssessment ? (
+                  <Row gutter={[16, 16]}>
+                    {/* Medication Adherence */}
+                    <Col span={12}>
+                      <Card type="inner" title="Medication Adherence">
+                        <div style={{ marginBottom: '12px' }}>
+                          <strong>Pattern:</strong>
+                          <p style={{ marginTop: '4px', color: '#666' }}>{riskAssessment.medicationAdherence.pattern}</p>
+                        </div>
+                        {riskAssessment.medicationAdherence.concerns && (
+                          <div style={{ marginBottom: '12px' }}>
+                            <strong>Concerns:</strong>
+                            <p style={{ marginTop: '4px', color: '#d32f2f' }}>{riskAssessment.medicationAdherence.concerns}</p>
+                          </div>
+                        )}
+                        <div>
+                          <strong>Recommendations:</strong>
+                          <p style={{ marginTop: '4px', color: '#1976d2' }}>{riskAssessment.medicationAdherence.recommendations}</p>
+                        </div>
+                      </Card>
+                    </Col>
+
+                    {/* Side Effects */}
+                    <Col span={12}>
+                      <Card type="inner" title="Side Effects Analysis">
+                        <div style={{ marginBottom: '12px' }}>
+                          <strong>Severity Trend:</strong>
+                          <p style={{ marginTop: '4px', color: '#666' }}>{riskAssessment.sideEffects.severityTrend}</p>
+                        </div>
+                        <div style={{ marginBottom: '12px' }}>
+                          <strong>Progression:</strong>
+                          <p style={{ marginTop: '4px', color: '#666' }}>{riskAssessment.sideEffects.progression}</p>
+                        </div>
+                        <div>
+                          <strong>Recommendations:</strong>
+                          <p style={{ marginTop: '4px', color: '#1976d2' }}>{riskAssessment.sideEffects.recommendations}</p>
+                        </div>
+                      </Card>
+                    </Col>
+
+                    {/* Weight Trends */}
+                    <Col span={12}>
+                      <Card type="inner" title="Weight Analysis">
+                        <div style={{ marginBottom: '8px' }}>
+                          <strong>Change:</strong> {riskAssessment.weightTrends.baselineWeight} → {riskAssessment.weightTrends.currentWeight} 
+                          <span style={{ color: '#2e7d32', fontWeight: 'bold', marginLeft: '8px' }}>
+                            ({riskAssessment.weightTrends.totalChange})
+                          </span>
+                        </div>
+                        <div style={{ marginBottom: '12px' }}>
+                          <strong>Pattern:</strong>
+                          <p style={{ marginTop: '4px', color: '#666' }}>{riskAssessment.weightTrends.pattern}</p>
+                        </div>
+                        <div>
+                          <strong>Recommendations:</strong>
+                          <p style={{ marginTop: '4px', color: '#1976d2' }}>{riskAssessment.weightTrends.recommendations}</p>
+                        </div>
+                      </Card>
+                    </Col>
+
+                    {/* Activity Levels */}
+                    <Col span={12}>
+                      <Card type="inner" title="Activity Analysis">
+                        <div style={{ marginBottom: '12px' }}>
+                          <strong>Pattern:</strong>
+                          <p style={{ marginTop: '4px', color: '#666' }}>{riskAssessment.activityLevels.pattern}</p>
+                        </div>
+                        <div style={{ marginBottom: '12px' }}>
+                          <strong>Correlation:</strong>
+                          <p style={{ marginTop: '4px', color: '#666' }}>{riskAssessment.activityLevels.correlation}</p>
+                        </div>
+                        <div>
+                          <strong>Recommendations:</strong>
+                          <p style={{ marginTop: '4px', color: '#1976d2' }}>{riskAssessment.activityLevels.recommendations}</p>
+                        </div>
+                      </Card>
+                    </Col>
+
+                    {/* Symptom Evolution */}
+                    <Col span={24}>
+                      <Card type="inner" title="Symptom Evolution Timeline">
+                        <Row gutter={[16, 8]}>
+                          <Col span={8}>
+                            <div>
+                              <strong>Initial Status:</strong>
+                              <p style={{ marginTop: '4px', color: '#2e7d32' }}>{riskAssessment.symptomEvolution.initial}</p>
+                            </div>
+                          </Col>
+                          {riskAssessment.symptomEvolution.deterioration && (
+                            <Col span={8}>
+                              <div>
+                                <strong>Deterioration:</strong>
+                                <p style={{ marginTop: '4px', color: '#d32f2f' }}>{riskAssessment.symptomEvolution.deterioration}</p>
+                              </div>
+                            </Col>
+                          )}
+                          {riskAssessment.symptomEvolution.improvement && (
+                            <Col span={8}>
+                              <div>
+                                <strong>Improvement:</strong>
+                                <p style={{ marginTop: '4px', color: '#2e7d32' }}>{riskAssessment.symptomEvolution.improvement}</p>
+                              </div>
+                            </Col>
+                          )}
+                        </Row>
+                        <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #f0f0f0' }}>
+                          <strong>Clinical Recommendations:</strong>
+                          <p style={{ marginTop: '4px', color: '#1976d2', fontWeight: '500' }}>{riskAssessment.symptomEvolution.recommendations}</p>
+                        </div>
+                      </Card>
+                    </Col>
+                  </Row>
+                ) : !isLoadingRiskAssessment ? (
+                  <p style={{ textAlign: 'center', color: '#666', fontStyle: 'italic' }}>
+                    No risk assessment data available
+                  </p>
+                ) : null}
+              </Card>
+            </Col>
+          )}
 
           {/* Member Goals */}
           <Col span={12}>

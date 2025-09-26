@@ -1,1 +1,10 @@
 project_id = "gvvphfrxnckctewefekw"
+
+[functions.member-risk-assessment]
+verify_jwt = false
+
+[functions.overall-risk-assessment]
+verify_jwt = false
+
+[functions.csv-summarizer]
+verify_jwt = false
