@@ -24,7 +24,7 @@ export function MembersTable({ members, onMemberClick }: MembersTableProps) {
   const navigate = useNavigate();
   
   const handleMemberClick = (member: MemberProfile) => {
-    navigate(`/member-risk/${encodeURIComponent(member.name)}`);
+    navigate(`/member-risk/${member.id}`);
   };
   
   const filteredMembers = members.filter(member =>

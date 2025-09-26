@@ -17,19 +17,18 @@ import { MemberProfile } from "@/utils/csvParser";
 import styles from "./MemberDetail.module.css";
 
 export default function MemberDetail() {
-  const { memberName } = useParams<{ memberName: string }>();
+  const { memberId } = useParams<{ memberId: string }>();
   const navigate = useNavigate();
   const [member, setMember] = useState<MemberProfile | null>(null);
   const [newGoal, setNewGoal] = useState("");
   const [additionalGoals, setAdditionalGoals] = useState<string[]>([]);
 
   useEffect(() => {
-    if (memberName) {
-      const decodedName = decodeURIComponent(memberName);
-      const foundMember = surveyMembers.find(m => m.name === decodedName);
+    if (memberId) {
+      const foundMember = surveyMembers.find(m => m.id === memberId);
       setMember(foundMember || null);
     }
-  }, [memberName]);
+  }, [memberId]);
 
   if (!member) {
     return (
