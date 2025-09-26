@@ -18,7 +18,7 @@ export interface MemberProfile {
   height: string;
   totalSurveys: number;
   lastSurveyDate: string;
-  surveyCompliance: number;
+  programCompliance: number;
   currentWeight: number;
   initialWeight: number;
   weightChange: number;
@@ -139,7 +139,7 @@ export function aggregateMemberData(surveys: SurveyResponse[]): MemberProfile[] 
       height: lastSurvey.height,
       totalSurveys: memberSurveys.length,
       lastSurveyDate: formatDate(lastSurvey.submittedAt),
-      surveyCompliance: Math.round(complianceRate),
+      programCompliance: Math.round(complianceRate),
       currentWeight,
       initialWeight,
       weightChange: Math.round(weightChange * 10) / 10,

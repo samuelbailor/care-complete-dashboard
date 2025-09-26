@@ -83,9 +83,9 @@ export function MembersTable({ members, onMemberClick }: MembersTableProps) {
       ),
     },
     {
-      title: 'Survey Compliance',
-      dataIndex: 'surveyCompliance',
-      key: 'surveyCompliance',
+      title: 'Program Compliance',
+      dataIndex: 'programCompliance',
+      key: 'programCompliance',
       render: (compliance: number, record: MemberProfile) => (
         <div>
           <div className={styles.complianceContainer}>

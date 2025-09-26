@@ -34,7 +34,7 @@ export default function Dashboard() {
         const riskOrder = { "High": 3, "Medium": 2, "Low": 1 };
         return riskOrder[b.riskLevel] - riskOrder[a.riskLevel];
       } else if (sortBy === "compliance") {
-        return a.surveyCompliance - b.surveyCompliance;
+        return a.programCompliance - b.programCompliance;
       } else {
         return a.weightChange - b.weightChange;
       }
@@ -84,7 +84,7 @@ export default function Dashboard() {
   const stats = {
     totalMembers: surveyMembers.length,
     highRisk: surveyMembers.filter(m => m.riskLevel === "High").length,
-    avgCompliance: Math.round(surveyMembers.reduce((acc, m) => acc + m.surveyCompliance, 0) / surveyMembers.length),
+    avgCompliance: Math.round(surveyMembers.reduce((acc, m) => acc + m.programCompliance, 0) / surveyMembers.length),
     avgWeightLoss: Math.round(surveyMembers.reduce((acc, m) => acc + m.weightChange, 0) / surveyMembers.length * 10) / 10,
   };
 

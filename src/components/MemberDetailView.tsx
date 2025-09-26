@@ -178,11 +178,11 @@ export function MemberDetailView({ member, visible, onClose }: MemberDetailViewP
                 </span>
               </div>
               <div className={styles.complianceProgress}>
-                <span className={styles.label}>Medication Compliance:</span>
+                <span className={styles.label}>Program Compliance:</span>
                 <Progress 
-                  percent={member.surveyCompliance} 
+                  percent={member.programCompliance} 
                   size="small"
-                  strokeColor={member.surveyCompliance >= 80 ? '#52c41a' : member.surveyCompliance >= 60 ? '#faad14' : '#ff4d4f'}
+                  strokeColor={member.programCompliance >= 80 ? '#52c41a' : member.programCompliance >= 60 ? '#faad14' : '#ff4d4f'}
                 />
               </div>
               <div className={styles.infoItem}>
