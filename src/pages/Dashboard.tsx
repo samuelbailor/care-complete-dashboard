@@ -8,6 +8,7 @@ import {
   ExportOutlined,
   FileTextOutlined
 } from "@ant-design/icons";
+import ReactMarkdown from 'react-markdown';
 import { MembersTable } from "@/components/MembersTable";
 import { programData } from "@/data/surveyMembers";
 import { MemberProfile } from "@/utils/csvParser";
@@ -293,8 +294,8 @@ export default function Dashboard() {
             <p style={{ marginTop: '16px' }}>Analyzing CSV data...</p>
           </div>
         ) : (
-          <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.6' }}>
-            {summary}
+          <div style={{ lineHeight: '1.6', padding: '16px 0' }}>
+            <ReactMarkdown>{summary}</ReactMarkdown>
           </div>
         )}
       </Modal>
