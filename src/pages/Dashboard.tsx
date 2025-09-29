@@ -29,11 +29,12 @@ export default function Dashboard() {
 
   const currentMembers = programData[selectedProgram].members;
 
-  // Merge risk assessment data with current members
-  const membersWithRiskData = currentMembers.map(member => {
-    const riskData = riskAssessmentData?.members.find(rd => rd.name === member.name);
-    const newRiskLevel = riskData ? (riskData.risk.charAt(0).toUpperCase() + riskData.risk.slice(1)) : member.riskLevel;
-    // Ensure risk level is valid
+  // Merge risk assessment data with current members - only use API data
+  const membersWithRiskData = riskAssessmentData ? currentMembers.map(member => {
+    const riskData = riskAssessmentData.members.find(rd => rd.name === member.name);
+    if (!riskData) return member; // Keep original if no match
+    
+    const newRiskLevel = riskData.risk.charAt(0).toUpperCase() + riskData.risk.slice(1);
     const validatedRiskLevel = (newRiskLevel === "High" || newRiskLevel === "Medium" || newRiskLevel === "Low") 
       ? newRiskLevel as "High" | "Medium" | "Low"
       : member.riskLevel;
@@ -41,9 +42,9 @@ export default function Dashboard() {
     return {
       ...member,
       riskLevel: validatedRiskLevel,
-      programCompliance: riskData ? parseInt(riskData.compliance.replace('%', '')) : member.programCompliance,
+      programCompliance: parseInt(riskData.compliance.replace('%', '')),
     };
-  });
+  }) : currentMembers;
 
   const sortedMembers = [...membersWithRiskData]
     .filter(member => filterRisk === "All" || member.riskLevel === filterRisk)
@@ -150,8 +151,8 @@ export default function Dashboard() {
 
   const stats = {
     totalMembers: membersWithRiskData.length,
-    highRisk: membersWithRiskData.filter(m => m.riskLevel === "High").length,
-    avgCompliance: Math.round(membersWithRiskData.reduce((acc, m) => acc + m.programCompliance, 0) / membersWithRiskData.length),
+    highRisk: riskAssessmentData ? membersWithRiskData.filter(m => m.riskLevel === "High").length : null,
+    avgCompliance: riskAssessmentData ? Math.round(membersWithRiskData.reduce((acc, m) => acc + m.programCompliance, 0) / membersWithRiskData.length) : null,
     avgWeightLoss: Math.round(membersWithRiskData.reduce((acc, m) => acc + m.weightChange, 0) / membersWithRiskData.length * 10) / 10,
   };
 
@@ -223,7 +224,9 @@ export default function Dashboard() {
               <ExclamationCircleOutlined />
               High Risk Members
             </div>
-            <div className={`${styles.statValue} ${styles.error}`}>{stats.highRisk}</div>
+            <div className={`${styles.statValue} ${styles.error}`}>
+              {isLoadingRiskData ? <Spin size="small" /> : stats.highRisk}
+            </div>
           </Card>
 
           <Card className={`${styles.statCard} ${styles.compliance}`}>
@@ -231,7 +234,9 @@ export default function Dashboard() {
               <ThunderboltOutlined />
               Avg. Compliance
             </div>
-            <div className={styles.statValue}>{stats.avgCompliance}%</div>
+            <div className={styles.statValue}>
+              {isLoadingRiskData ? <Spin size="small" /> : `${stats.avgCompliance}%`}
+            </div>
           </Card>
 
           <Card className={`${styles.statCard} ${styles.weightLoss}`}>
